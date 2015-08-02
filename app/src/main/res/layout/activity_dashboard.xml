@@ -30,7 +30,7 @@
     <FrameLayout
         android:id="@+id/frag_dash_navigation"
         android:layout_gravity="start"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/panel_navigation_size"
         android:layout_height="fill_parent"/>
 
 

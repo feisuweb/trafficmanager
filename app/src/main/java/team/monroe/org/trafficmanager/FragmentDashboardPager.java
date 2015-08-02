@@ -40,6 +40,7 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
                 switch (position){
                     case 0: return new FragmentPageBandwidthLimits();
                     case 1: return new FragmentPageClients();
+                    case 2: return new FragmentPageRouterConfiguration();
                     default:
                         throw new IllegalStateException();
                 }
@@ -53,7 +54,7 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
 
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
         };
         mViewPager.setAdapter(mFragmentPagerAdapter);
