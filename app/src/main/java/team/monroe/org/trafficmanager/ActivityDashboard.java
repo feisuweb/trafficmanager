@@ -14,15 +14,25 @@ public class ActivityDashboard extends ActivitySupport<App> {
         if (isFirstRun()){
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.frag_dash_header, new FragmentDashboardHeader())
-                    .add(R.id.frag_dash_navigation, new FragmentDashboardNavigation())
-                    .add(R.id.frag_dash_body, new FragmentDashboardPager())
+                       .add(R.id.frag_dash_header, new FragmentDashboardHeader())
+                       .add(R.id.frag_dash_navigation, new FragmentDashboardNavigation())
+                       .add(R.id.frag_dash_body, new FragmentDashboardPager())
                     .commit();
         }
     }
 
-    public void onScreenChanged(int position) {
+    public void onScreenChanged(int position) {}
 
+    private FragmentDashboardPager getPager() {
+        return (FragmentDashboardPager) getFragmentManager().findFragmentById(R.id.frag_dash_body);
     }
 
+    public void setHeaderText(String headerText) {
+        FragmentDashboardHeader dashboardHeader = (FragmentDashboardHeader) getFragmentManager().findFragmentById(R.id.frag_dash_header);
+        dashboardHeader.setText(headerText);
+    }
+
+    public FragmentDashboardPage getCurrentPage() {
+        return getPager().getCurrentSlide();
+    }
 }

@@ -11,6 +11,7 @@
     style="@style/Panel.Main"
     >
     <TextView
+        android:id="@+id/text_caption"
         android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

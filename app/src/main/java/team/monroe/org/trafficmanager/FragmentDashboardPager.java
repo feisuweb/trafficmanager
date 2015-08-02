@@ -3,6 +3,10 @@ package team.monroe.org.trafficmanager;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FragmentDashboardPager extends AbstractFragmentDashboard implements ContractBackButton{
 
@@ -20,23 +24,40 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
         mViewPager = view(R.id.view_pager,ViewPager.class);
         mFragmentPagerAdapter = new FragmentPageAdapter(activity().getFragmentManager()) {
 
+            private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
+
             @Override
             public Fragment getItem(int position) {
+                Fragment answer = fragmentMap.get(position);
+                if (answer == null){
+                    answer = createFragment(position);
+                    fragmentMap.put(position, answer);
+                }
+                return answer;
+            }
+
+            private Fragment createFragment(int position) {
                 switch (position){
                     case 0: return new FragmentPageBandwidthLimits();
+                    case 1: return new FragmentPageClients();
                     default:
                         throw new IllegalStateException();
                 }
             }
 
             @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                mFragmentPagerAdapter.getItem(position);
+                super.destroyItem(container, position, object);
+            }
+
+            @Override
             public int getCount() {
-                return 1;
+                return 2;
             }
         };
         mViewPager.setAdapter(mFragmentPagerAdapter);
         mFragmentPagerAdapter.notifyDataSetChanged();
-
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -75,9 +96,6 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
                 return true;
             }
         }
-
-        if (mViewPager.getCurrentItem() == 1) return false;
-        mViewPager.setCurrentItem(1, true);
         return true;
     }
 
@@ -86,6 +104,14 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
     }
 
     private FragmentDashboardPage getPage(int pageIndex) {
+        FragmentDashboardPage page = getFragmentDashboardPageByFragmentManager(pageIndex);
+        if (page == null){
+           // page = (FragmentDashboardPage) mFragmentPagerAdapter.getItem(pageIndex);
+        }
+        return page;
+    }
+
+    private FragmentDashboardPage getFragmentDashboardPageByFragmentManager(int pageIndex) {
         String pageTag = "android:switcher:" + mViewPager.getId() + ":" + pageIndex;
         return (FragmentDashboardPage) getFragmentManager().findFragmentByTag(pageTag);
     }
