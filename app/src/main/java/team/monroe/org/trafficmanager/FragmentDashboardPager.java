@@ -23,7 +23,7 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
             @Override
             public Fragment getItem(int position) {
                 switch (position){
-                    case 0: return new FragmentPageComputerList();
+                    case 0: return new FragmentPageBandwidthLimits();
                     default:
                         throw new IllegalStateException();
                 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/Panel.Main"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    >
+    <team.monroe.org.trafficmanager.view.MyScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:id="@+id/panel_page_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            android:orientation="vertical" />
+   </team.monroe.org.trafficmanager.view.MyScrollView>
+
+    <ImageView
+        android:id="@+id/image_scroll_shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="7dp"
+        android:src="@drawable/shadow_down"
+        android:scaleType="fitXY"/>
+
+
+</RelativeLayout>
