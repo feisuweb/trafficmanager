@@ -17,4 +17,16 @@
         android:text="Page Caption"
         style="@style/Text.Header"
         />
+    <Space
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" />
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/android_router"/>
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/android_more"/>
 </LinearLayout>
