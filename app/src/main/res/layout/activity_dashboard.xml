@@ -12,7 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <FrameLayout
+            android:id="@+id/frag_dash_header"
+            android:layout_width="fill_parent"
+            android:layout_height="80dp"/>
+
+        <FrameLayout
+            android:layout_below="@+id/frag_dash_header"
             android:id="@+id/frag_dash_body"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>

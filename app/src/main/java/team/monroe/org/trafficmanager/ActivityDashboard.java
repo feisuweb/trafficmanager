@@ -14,8 +14,9 @@ public class ActivityDashboard extends ActivitySupport<App> {
         if (isFirstRun()){
             getFragmentManager()
                     .beginTransaction()
-                    .add(R.id.frag_dash_body, new FragmentDashboardPager())
+                    .add(R.id.frag_dash_header, new FragmentDashboardHeader())
                     .add(R.id.frag_dash_navigation, new FragmentDashboardNavigation())
+                    .add(R.id.frag_dash_body, new FragmentDashboardPager())
                     .commit();
         }
     }

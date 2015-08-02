@@ -1,6 +1,33 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Panel.Main" parent="AppTheme">
+        <item name="android:background">#fffcfcfc</item>
+    </style>
+
+    <style name="Panel.Navigation" parent="AppTheme">
+        <item name="android:background">#ffededed</item>
+    </style>
+
+
+    <style name="Text" parent="AppTheme">
+        <item name="android:fontFamily" tools:ignore="NewApi">sans-serif</item>
+        <item name="android:textColor">@color/text.dark</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:shadowDy">-1</item>
+        <item name="android:shadowDx">-1</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:shadowColor">@color/glow.white</item>
+    </style>
+
+    <style name="Text.Header" parent="Text">
+        <item name="android:textAppearance">@android:style/TextAppearance.Large</item>
+    </style>
+
+    <color name="text.dark">#ff5a5a5a</color>
+    <color name="glow.white">#a3ffffff</color>
+
 </resources>
