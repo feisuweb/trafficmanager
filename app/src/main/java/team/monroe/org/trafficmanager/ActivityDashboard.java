@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.monroe.team.android.box.app.ActivitySupport;
 
-public class ActivityDashboard extends ActionBarActivity {
+
+public class ActivityDashboard extends ActivitySupport<App> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
