@@ -7,4 +7,8 @@ public class App extends ApplicationSupport<AppModel> {
     protected AppModel createModel() {
         return new AppModel("route_manager", this);
     }
+
+    public boolean function_hasRouterConfiguration() {
+        return false;
+    }
 }

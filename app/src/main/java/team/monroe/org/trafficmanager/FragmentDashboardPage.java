@@ -25,7 +25,7 @@ public abstract class FragmentDashboardPage extends AbstractFragmentDashboard {
         }
     }
 
-    private boolean isOnTop() {
+    protected boolean isOnTop() {
         return dashboard().getCurrentPage() == this;
     }
 }
