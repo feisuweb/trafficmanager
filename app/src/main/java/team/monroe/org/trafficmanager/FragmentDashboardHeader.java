@@ -3,7 +3,7 @@ package team.monroe.org.trafficmanager;
 import android.os.Bundle;
 import android.widget.TextView;
 
-public class FragmentDashboardHeader extends AbstractFragmentDashboard {
+public class FragmentDashboardHeader extends FragmentDashboardSupport {
     private TextView mTextCaption;
 
     @Override

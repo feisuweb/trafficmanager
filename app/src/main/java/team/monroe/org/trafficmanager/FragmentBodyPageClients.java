@@ -1,6 +1,6 @@
 package team.monroe.org.trafficmanager;
 
-public class FragmentPageClients extends FragmentPageScrollablePanel{
+public class FragmentBodyPageClients extends FragmentBodyPageScrollablePanel {
     @Override
     protected int getPanelLayoutId() {
         return R.layout.page_bandwidth_limits;

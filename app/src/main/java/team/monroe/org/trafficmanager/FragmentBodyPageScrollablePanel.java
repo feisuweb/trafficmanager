@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 
 import team.monroe.org.trafficmanager.view.MyScrollView;
 
-public abstract class FragmentPageScrollablePanel extends FragmentDashboardPage {
+public abstract class FragmentBodyPageScrollablePanel extends FragmentDashboardBodyPage {
 
     private View mTopShadow;
     private MyScrollView mScrollView;

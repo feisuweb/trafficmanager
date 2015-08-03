@@ -1,6 +1,6 @@
 package team.monroe.org.trafficmanager;
 
-public class FragmentDashboardNavigation extends AbstractFragmentDashboard {
+public class FragmentDashboardNavigation extends FragmentDashboardSupport {
 
     @Override
     protected int getLayoutId() {

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FragmentDashboardPager extends AbstractFragmentDashboard implements ContractBackButton{
+public class FragmentDashboardMultiPage extends FragmentDashboardSupport implements ContractBackButton{
 
     private ViewPager mViewPager;
     private FragmentPageAdapter mFragmentPagerAdapter;
@@ -38,8 +38,8 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
 
             private Fragment createFragment(int position) {
                 switch (position){
-                    case 0: return new FragmentPageBandwidthLimits();
-                    case 1: return new FragmentPageClients();
+                    case 0: return new FragmentBodyPageBandwidthLimits();
+                    case 1: return new FragmentBodyPageClients();
                     default:
                         throw new IllegalStateException();
                 }
@@ -90,7 +90,7 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
 
     @Override
     public boolean onBackPressed() {
-        FragmentDashboardPage dashboardSlide = getCurrentSlide();
+        FragmentDashboardBodyPage dashboardSlide = getCurrentPage();
         if (dashboardSlide instanceof ContractBackButton){
             if (((ContractBackButton) dashboardSlide).onBackPressed()){
                 return true;
@@ -99,27 +99,27 @@ public class FragmentDashboardPager extends AbstractFragmentDashboard implements
         return true;
     }
 
-    public void updateScreen(int screenPosition) {
-        mViewPager.setCurrentItem(screenPosition, true);
+    public void slideToPage(int position) {
+        mViewPager.setCurrentItem(position, true);
     }
 
-    private FragmentDashboardPage getPage(int pageIndex) {
-        FragmentDashboardPage page = getFragmentDashboardPageByFragmentManager(pageIndex);
+    private FragmentDashboardBodyPage getPage(int pageIndex) {
+        FragmentDashboardBodyPage page = getFragmentDashboardPageByFragmentManager(pageIndex);
         if (page == null){
            // page = (FragmentDashboardPage) mFragmentPagerAdapter.getItem(pageIndex);
         }
         return page;
     }
 
-    private FragmentDashboardPage getFragmentDashboardPageByFragmentManager(int pageIndex) {
+    private FragmentDashboardBodyPage getFragmentDashboardPageByFragmentManager(int pageIndex) {
         String pageTag = "android:switcher:" + mViewPager.getId() + ":" + pageIndex;
-        return (FragmentDashboardPage) getFragmentManager().findFragmentByTag(pageTag);
+        return (FragmentDashboardBodyPage) getFragmentManager().findFragmentByTag(pageTag);
     }
 
-    public FragmentDashboardPage getCurrentSlide() {
+    public FragmentDashboardBodyPage getCurrentPage() {
         int curItem = mViewPager.getCurrentItem();
         Fragment fragment = getPage(curItem);
-        return (FragmentDashboardPage) fragment;
+        return (FragmentDashboardBodyPage) fragment;
     }
 
     public void viewPagerGesture(boolean enabled) {

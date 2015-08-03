@@ -66,7 +66,7 @@ android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)
     <color name="text.dark">#ff5a5a5a</color>
     <color name="text_highlight">#ff3f77cf</color>
     <color name="glow.white">#a3ffffff</color>
-    <color name="transparent">#ffffff</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="button.pressed">#45000000</color>
 
 </resources>

@@ -21,12 +21,12 @@ public class ActivityDashboard extends ActivitySupport<App> {
             if (application().function_hasRouterConfiguration()){
                 getFragmentManager()
                         .beginTransaction()
-                          .add(R.id.frag_dash_body, new FragmentDashboardPager())
+                          .add(R.id.frag_dash_body, new FragmentDashboardMultiPage())
                         .commit();
             }else {
                 getFragmentManager()
                         .beginTransaction()
-                        .add(R.id.frag_dash_body, new FragmentDashboardRouterConfiguration())
+                        .add(R.id.frag_dash_body, new FragmentDashboardBodyPageRouterConfiguration())
                         .commit();
             }
         }
@@ -47,8 +47,16 @@ public class ActivityDashboard extends ActivitySupport<App> {
         dashboardHeader.setText(headerText);
     }
 
-    public FragmentDashboardPage getCurrentPage() {
-        return getBody(FragmentDashboardPager.class).getCurrentSlide();
+    public FragmentDashboardBodyPage getCurrentPage() {
+        Fragment fragment = getBody(Fragment.class);
+        if (fragment == null)return null;
+        FragmentDashboardBodyPage page;
+        if (fragment instanceof FragmentDashboardMultiPage){
+            page = ((FragmentDashboardMultiPage) fragment).getCurrentPage();
+        }else {
+            page = (FragmentDashboardBodyPage) fragment;
+        }
+        return page;
     }
 
     final protected FragmentTransitionSet animation_slide_from_left() {

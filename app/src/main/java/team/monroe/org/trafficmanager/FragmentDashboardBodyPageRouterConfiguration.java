@@ -1,6 +1,6 @@
 package team.monroe.org.trafficmanager;
 
-public class FragmentDashboardRouterConfiguration extends FragmentPageScrollablePanel{
+public class FragmentDashboardBodyPageRouterConfiguration extends FragmentBodyPageScrollablePanel {
     @Override
     protected int getPanelLayoutId() {
         return R.layout.fragment_dashboard_router_configuration;
@@ -11,8 +11,4 @@ public class FragmentDashboardRouterConfiguration extends FragmentPageScrollable
         return "Router Configuration";
     }
 
-    @Override
-    protected boolean isOnTop() {
-        return true;
-    }
 }
