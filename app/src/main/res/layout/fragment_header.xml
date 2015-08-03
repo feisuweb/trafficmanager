@@ -10,24 +10,47 @@
     android:paddingBottom="20dp"
     style="@style/Panel.Main"
     >
+    <RelativeLayout
+        android:layout_marginLeft="20dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp">
+
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            style="@style/Button.Round.Action"
+            />
+
+        <ImageView
+            android:id="@+id/image_icon"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/text_caption"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Page Caption"
         style="@style/Text.Header"
         />
+
     <Space
         android:layout_weight="1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
+
     <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        style="@style/Button.Round.Action"
         android:src="@drawable/android_router"/>
-    <ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        style="@style/Button.Round.Action"
         android:src="@drawable/android_more"/>
 </LinearLayout>

@@ -7,7 +7,7 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageScrollableP
     }
 
     @Override
-    protected String getHeaderText() {
-        return "Bandwidth Limits";
+    protected ActivityDashboard.BodyPageId getPageId() {
+        return ActivityDashboard.BodyPageId.BANDWIDTH_LIMITS;
     }
 }

@@ -59,7 +59,7 @@ android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)
         <item name="android:background">@drawable/button_round</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:padding">3dp</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
 

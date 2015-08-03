@@ -7,7 +7,7 @@ public class FragmentBodyPageClients extends FragmentBodyPageScrollablePanel {
     }
 
     @Override
-    protected String getHeaderText() {
-        return "Bandwidth Clients";
+    protected ActivityDashboard.BodyPageId getPageId() {
+        return ActivityDashboard.BodyPageId.CLIENTS;
     }
 }

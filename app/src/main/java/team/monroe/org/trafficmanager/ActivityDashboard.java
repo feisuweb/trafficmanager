@@ -42,9 +42,9 @@ public class ActivityDashboard extends ActivitySupport<App> {
         return (Type) fragment;
     }
 
-    public void setHeaderText(String headerText) {
+    public void updateHeader(BodyPageId pageId, boolean stepBackSupport) {
         FragmentDashboardHeader dashboardHeader = (FragmentDashboardHeader) getFragmentManager().findFragmentById(R.id.frag_dash_header);
-        dashboardHeader.setText(headerText);
+        dashboardHeader.update(pageId, stepBackSupport);
     }
 
     public FragmentDashboardBodyPage getCurrentPage() {
@@ -82,6 +82,21 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 .commit();
     }
 
+    public BodyPageInfo resolvePageInfo(BodyPageId pageId) {
+        String title ="";
+        int icon = 0;
+        switch (pageId){
+            case ROUTER_CONFIGURATION:
+                title = "Router Configuration";
+                icon = R.drawable.android_router;
+                break;
+            default:
+                throw new IllegalStateException("Unssuported");
+        }
+        return new BodyPageInfo(title, icon, pageId);
+    }
+
+
     public static class FragmentTransitionSet{
 
         public final int inAnimation;
@@ -90,6 +105,23 @@ public class ActivityDashboard extends ActivitySupport<App> {
         public FragmentTransitionSet(int inAnimation, int outAnimation) {
             this.inAnimation = inAnimation;
             this.outAnimation = outAnimation;
+        }
+    }
+
+    public static enum BodyPageId{
+        ROUTER_CONFIGURATION, BANDWIDTH_LIMITS, BANDWIDTH_PROFILES, CLIENTS
+    }
+
+    public static class BodyPageInfo{
+
+        public final String title;
+        public final int icon;
+        public final BodyPageId id;
+
+        public BodyPageInfo(String title, int icon, BodyPageId id) {
+            this.title = title;
+            this.icon = icon;
+            this.id = id;
         }
     }
 }

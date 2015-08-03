@@ -6,9 +6,9 @@ public class FragmentDashboardBodyPageRouterConfiguration extends FragmentBodyPa
         return R.layout.fragment_dashboard_router_configuration;
     }
 
-    @Override
-    protected String getHeaderText() {
-        return "Router Configuration";
-    }
 
+    @Override
+    protected ActivityDashboard.BodyPageId getPageId() {
+        return ActivityDashboard.BodyPageId.ROUTER_CONFIGURATION;
+    }
 }

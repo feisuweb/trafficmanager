@@ -11,7 +11,7 @@ public abstract class FragmentDashboardBodyPage extends FragmentDashboardSupport
 
     protected void onPageOnTop() {}
 
-    protected abstract String getHeaderText();
+    protected abstract ActivityDashboard.BodyPageId getPageId();
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -21,8 +21,12 @@ public abstract class FragmentDashboardBodyPage extends FragmentDashboardSupport
 
     private void updateHeader() {
         if(isOnTop()) {
-            dashboard().setHeaderText(getHeaderText());
+            dashboard().updateHeader(getPageId(), isStepBackSupport());
         }
+    }
+
+    protected boolean isStepBackSupport() {
+        return false;
     }
 
     protected boolean isOnTop() {
