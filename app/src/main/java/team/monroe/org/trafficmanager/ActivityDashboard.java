@@ -99,11 +99,11 @@ public class ActivityDashboard extends ActivitySupport<App> {
     }
 
     public void open_routerConfiguration() {
-        replaceBody(new FragmentDashboardBodyPageRouterConfiguration(), animation_down_up());
+        replaceBody(new FragmentDashboardBodyPageRouterConfiguration(), animation_slide_from_left());
     }
 
     public void open_mainSlider() {
-        replaceBody(new FragmentDashboardMultiPage(), animation_down_up());
+        replaceBody(new FragmentDashboardMultiPage(), animation_slide_from_right());
     }
 
 

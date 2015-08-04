@@ -12,6 +12,7 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
 
     private ViewPager mViewPager;
     private FragmentPageAdapter mFragmentPagerAdapter;
+    private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
     @Override
     protected int getLayoutId() {
@@ -24,7 +25,6 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
         mViewPager = view(R.id.view_pager,ViewPager.class);
         mFragmentPagerAdapter = new FragmentPageAdapter(activity().getFragmentManager()) {
 
-            private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
 
             @Override
             public Fragment getItem(int position) {
@@ -47,7 +47,7 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                mFragmentPagerAdapter.getItem(position);
+                Fragment fragment = fragmentMap.remove(position);
                 super.destroyItem(container, position, object);
             }
 
@@ -84,6 +84,7 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
     public void onDestroy() {
         super.onDestroy();
         if (mFragmentPagerAdapter != null) {
+            mViewPager.setAdapter(null);
             mFragmentPagerAdapter = null;
         }
     }
