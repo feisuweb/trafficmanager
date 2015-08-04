@@ -49,10 +49,15 @@ android:fontFamily="sans-serif-medium"    // roboto medium (android 5.0)
     <style name="Button.Rect.Action" parent="@android:style/Widget.Button">
         <item name="android:gravity">center_vertical|center_horizontal</item>
         <item name="android:textColor">@color/text_highlight</item>
-        <item name="android:textSize">15dip</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Small</item>
         <item name="android:background">@drawable/button_panel</item>
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
+    </style>
+
+
+    <style name="Button.Rect.Action.Big" parent="Button.Rect.Action">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
     </style>
 
     <style name="Button.Round.Action" parent="@android:style/Widget.Button">

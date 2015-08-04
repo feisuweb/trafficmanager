@@ -46,7 +46,6 @@
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        style="@style/Button.Round.Action"
         android:src="@drawable/android_router"/>
     <ImageButton
         android:layout_width="40dp"

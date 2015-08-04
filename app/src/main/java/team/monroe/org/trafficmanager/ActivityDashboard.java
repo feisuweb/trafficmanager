@@ -17,18 +17,8 @@ public class ActivityDashboard extends ActivitySupport<App> {
                     .beginTransaction()
                        .add(R.id.frag_dash_header, new FragmentDashboardHeader())
                        .add(R.id.frag_dash_navigation, new FragmentDashboardNavigation())
+                       .add(R.id.frag_dash_body, new FragmentDashboardMultiPage())
                     .commit();
-            if (application().function_hasRouterConfiguration()){
-                getFragmentManager()
-                        .beginTransaction()
-                          .add(R.id.frag_dash_body, new FragmentDashboardMultiPage())
-                        .commit();
-            }else {
-                getFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.frag_dash_body, new FragmentDashboardBodyPageRouterConfiguration())
-                        .commit();
-            }
         }
     }
 
@@ -90,10 +80,26 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 title = "Router Configuration";
                 icon = R.drawable.android_router;
                 break;
+            case BANDWIDTH_LIMITS:
+                title = "Bandwidth Limits";
+                icon = R.drawable.android_components;
+                break;
+            case CLIENTS:
+                title = "Clients";
+                icon = R.drawable.android_devices;
+                break;
+            case  BANDWIDTH_PROFILES:
+                title = "Bandwidth Profiles";
+                icon = R.drawable.android_style;
+                break;
             default:
                 throw new IllegalStateException("Unssuported");
         }
         return new BodyPageInfo(title, icon, pageId);
+    }
+
+    public void open_routerConfiguration() {
+        replaceBody(new FragmentDashboardBodyPageRouterConfiguration(), animation_slide_from_right());
     }
 
 
