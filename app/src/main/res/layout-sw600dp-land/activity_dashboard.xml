@@ -7,6 +7,7 @@
     tools:context=".ActivityDashboard">
 
     <FrameLayout
+        android:layout_marginLeft="2dp"
         android:layout_toRightOf="@+id/frag_dash_navigation"
         android:layout_below="@+id/frag_dash_header"
         android:id="@+id/frag_dash_body"
@@ -14,6 +15,7 @@
         android:layout_height="fill_parent"/>
 
     <FrameLayout
+        android:layout_marginLeft="2dp"
         android:layout_toRightOf="@+id/frag_dash_navigation"
         android:id="@+id/frag_dash_header"
         android:layout_width="fill_parent"

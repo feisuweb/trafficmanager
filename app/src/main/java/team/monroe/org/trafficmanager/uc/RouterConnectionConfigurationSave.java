@@ -1,9 +1,11 @@
 package team.monroe.org.trafficmanager.uc;
 
+import org.monroe.team.android.box.services.SettingManager;
 import org.monroe.team.corebox.services.ServiceRegistry;
 import org.monroe.team.corebox.uc.UserCaseSupport;
 
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
+import team.monroe.org.trafficmanager.manage.ObjectManager;
 import team.monroe.org.trafficmanager.manage.RouterManager;
 
 public class RouterConnectionConfigurationSave extends UserCaseSupport<ConnectionConfiguration, Void> {
@@ -15,6 +17,7 @@ public class RouterConnectionConfigurationSave extends UserCaseSupport<Connectio
     @Override
     protected Void executeImpl(ConnectionConfiguration request) {
        using(RouterManager.class).checkOnline(request);
+       using(ObjectManager.class).putConnectionConfiguration(request);
        return null;
     }
 }

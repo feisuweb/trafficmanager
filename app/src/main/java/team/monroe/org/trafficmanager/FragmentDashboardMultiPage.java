@@ -84,7 +84,9 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
     public void onDestroy() {
         super.onDestroy();
         if (mFragmentPagerAdapter != null) {
-            mViewPager.setAdapter(null);
+            try {
+                mViewPager.setAdapter(null);
+            }catch (Exception e){}
             mFragmentPagerAdapter = null;
         }
     }
