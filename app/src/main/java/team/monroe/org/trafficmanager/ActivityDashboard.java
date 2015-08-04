@@ -99,7 +99,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
     }
 
     public void open_routerConfiguration() {
-        replaceBody(new FragmentDashboardBodyPageRouterConfiguration(), animation_slide_from_right());
+        replaceBody(new FragmentDashboardBodyPageRouterConfiguration(), animation_down_up());
     }
 
 

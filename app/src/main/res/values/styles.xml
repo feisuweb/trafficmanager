@@ -4,6 +4,11 @@
         <!-- Customize your theme here. -->
     </style>
 
+
+    <style name="Panel.Back" parent="AppTheme">
+        <item name="android:background">#ffe8e8e8</item>
+    </style>
+
     <style name="Panel.Main" parent="AppTheme">
         <item name="android:background">#fffcfcfc</item>
     </style>

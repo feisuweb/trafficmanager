@@ -18,7 +18,7 @@
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:startOffset="100"
-        android:duration="300"
+        android:duration="600"
         android:propertyName="yFraction"
         android:valueFrom="1"
         android:valueTo="0"

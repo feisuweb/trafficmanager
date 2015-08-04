@@ -3,7 +3,7 @@
 
     <objectAnimator
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:duration="300"
+        android:duration="600"
         android:propertyName="yFraction"
         android:valueFrom="0"
         android:valueTo="1"
