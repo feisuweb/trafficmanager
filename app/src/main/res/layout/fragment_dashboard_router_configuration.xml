@@ -36,21 +36,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <EditText
+                android:id="@+id/text_host"
                 android:layout_weight="1"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="Host, default 192.168.0.1"
                 android:singleLine="true"
+                android:inputType="textUri"
                 style="@style/Text"/>
             <EditText
+                android:id="@+id/text_port"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Port, default 80"
+                android:inputType="number"
                 style="@style/Text"/>
         </LinearLayout>
         <TextView
-            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Credentials"
@@ -59,20 +62,24 @@
             style="@style/Text.Caption"
             />
         <EditText
+            android:id="@+id/text_user"
             android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="User, default admin"
             style="@style/Text"/>
         <EditText
+            android:id="@+id/text_password"
             android:singleLine="true"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="Password, default admin"
+            android:inputType="textWebPassword"
             style="@style/Text"/>
     </LinearLayout>
 
     <Button
+        android:id="@+id/action_save"
         android:layout_below="@+id/panel_content"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

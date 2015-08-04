@@ -102,6 +102,10 @@ public class ActivityDashboard extends ActivitySupport<App> {
         replaceBody(new FragmentDashboardBodyPageRouterConfiguration(), animation_down_up());
     }
 
+    public void open_mainSlider() {
+        replaceBody(new FragmentDashboardMultiPage(), animation_down_up());
+    }
+
 
     public static class FragmentTransitionSet{
 

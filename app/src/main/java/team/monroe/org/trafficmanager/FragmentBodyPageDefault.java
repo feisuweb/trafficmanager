@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.monroe.team.android.box.data.Data;
+import org.monroe.team.corebox.log.L;
 
 import team.monroe.org.trafficmanager.exceptions.Issue;
 import team.monroe.org.trafficmanager.exceptions.IssuesCodes;
+import team.monroe.org.trafficmanager.uc.RouterConnectionConfigurationSave;
 import team.monroe.org.trafficmanager.view.MyScrollView;
 
 public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage {
@@ -72,23 +75,7 @@ public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage 
     final public void handleFetchError(Data.FetchError fetchError){
         if (fetchError instanceof Data.ExceptionFetchError){
             Throwable exception = ((Data.ExceptionFetchError) fetchError).cause;
-            if (exception instanceof Issue){
-                //TODO: Something here
-                int issueCode = ((Issue) exception).getIssueCode();
-                showIssue(new IssueRequest(
-                        ((Issue) exception).getIssueCode(),
-                        getIssueImageResource(issueCode),
-                        ((Issue) exception).getIssueCaption(getResources()),
-                        ((Issue) exception).getIssueDescription(getResources()),
-                        getIssueActionText(issueCode)));
-            } else {
-                showIssue(new IssueRequest(
-                        -1,
-                        getIssueImageResource(-1),
-                        "Upps something goes wrong",
-                        fetchError.message(),
-                        getIssueActionText(-1)));
-            }
+            handleException(exception);
         }else {
             showIssue(new IssueRequest(
                     -1,
@@ -99,16 +86,45 @@ public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage 
         }
     }
 
+   public void handleException(Throwable exception) {
+        L.w("UI","Exception handled", exception);
+        if (exception instanceof Issue){
+            //TODO: Something here
+            int issueCode = ((Issue) exception).getIssueCode();
+            showIssue(new IssueRequest(
+                    ((Issue) exception).getIssueCode(),
+                    getIssueImageResource(issueCode),
+                    ((Issue) exception).getIssueCaption(getResources()),
+                    ((Issue) exception).getIssueDescription(getResources()),
+                    getIssueActionText(issueCode)));
+        } else {
+            showIssue(new IssueRequest(
+                    -1,
+                    getIssueImageResource(-1),
+                    "Upps something goes wrong",
+                    exception.getClass().getName()+ "["+exception.getMessage()+"]",
+                    getIssueActionText(-1)));
+        }
+    }
+
     private String getIssueActionText(int issueCode) {
         String answer = customizeIssueActionText(issueCode);
         return answer != null? answer: "Try again ...";
     }
 
-    private String customizeIssueActionText(int issueCode) {
+    protected String customizeIssueActionText(int issueCode) {
         switch (issueCode){
             case IssuesCodes.NO_CONFIGURATION: return "Router Setup";
         }
         return null;
+    }
+
+    protected int customizeIssueImageResource(int issueCode) {
+        switch (issueCode){
+            case IssuesCodes.NO_CONFIGURATION: return R.drawable.android_build_big;
+        }
+        if (IssuesCodes.isHttpIssue(issueCode)) return R.drawable.android_http_big;
+        return 0;
     }
 
     private int getIssueImageResource(int issueCode) {
@@ -117,20 +133,24 @@ public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage 
         return R.drawable.android_bug_big;
     }
 
-    protected int customizeIssueImageResource(int issueCode) {
-        switch (issueCode){
-            case IssuesCodes.NO_CONFIGURATION: return R.drawable.android_build_big;
-        }
-        return 0;
-    }
 
     protected boolean onIssueAction(int issueCode){
         switch (issueCode){
             case IssuesCodes.NO_CONFIGURATION:
-                dashboard().open_routerConfiguration();
+                initiateRouterConfiguration();
+                return true;
+            case IssuesCodes.HTTP_NOT_AUTHORIZED:
+                initiateRouterConfiguration();
+                return true;
+            case IssuesCodes.HTTP_BAD_URL:
+                initiateRouterConfiguration();
                 return true;
         }
         return false;
+    }
+
+    private void initiateRouterConfiguration() {
+        dashboard().open_routerConfiguration();
     }
 
     final public void showIssue(IssueRequest request) {
@@ -138,6 +158,7 @@ public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage 
         mIssueRequest = request;
         mState = State.ISSUE;
         visibility_allGone();
+        view(R.id.action_issue, Button.class).setText(request.actionText);
         view(R.id.text_issue_caption, TextView.class).setText(request.caption);
         view(R.id.text_issue_description, TextView.class).setText(request.description);
         view(R.id.issue_icon, ImageView.class).setImageResource(request.iconResource);
