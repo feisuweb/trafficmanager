@@ -14,7 +14,7 @@ import org.monroe.team.corebox.log.L;
 
 import team.monroe.org.trafficmanager.exceptions.Issue;
 import team.monroe.org.trafficmanager.exceptions.IssuesCodes;
-import team.monroe.org.trafficmanager.uc.RouterConnectionConfigurationSave;
+import team.monroe.org.trafficmanager.poc.ListPanelPresenter;
 import team.monroe.org.trafficmanager.view.MyScrollView;
 
 public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage {
@@ -38,6 +38,15 @@ public abstract class FragmentBodyPageDefault extends FragmentDashboardBodyPage 
         View view = super.onCreateView(inflater, container, savedInstanceState);
         inflater.inflate(getPanelLayoutId(), (ViewGroup) view.findViewById(R.id.panel_page_content), true);
         return view;
+    }
+
+    protected ListPanelPresenter.DataViewResolver<Object> viewResolver_defaultNoItems() {
+        return new ListPanelPresenter.DataViewResolver<Object>() {
+            @Override
+            public View build(Object o, ViewGroup parent, LayoutInflater inflater) {
+                return inflater.inflate(R.layout.item_default_no_items, parent, false);
+            }
+        };
     }
 
     protected abstract int getPanelLayoutId();

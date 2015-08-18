@@ -85,7 +85,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 icon = R.drawable.android_components;
                 break;
             case CLIENTS:
-                title = "Clients";
+                title = "Client Aliases";
                 icon = R.drawable.android_devices;
                 break;
             case  BANDWIDTH_PROFILES:
@@ -93,7 +93,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 icon = R.drawable.android_style;
                 break;
             default:
-                throw new IllegalStateException("Unssuported");
+                throw new IllegalStateException("Unsupported");
         }
         return new BodyPageInfo(title, icon, pageId);
     }

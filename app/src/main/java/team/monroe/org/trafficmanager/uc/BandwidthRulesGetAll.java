@@ -11,9 +11,9 @@ import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
 import team.monroe.org.trafficmanager.exceptions.NoConfigurationIssue;
 import team.monroe.org.trafficmanager.manage.ObjectManager;
 
-public class GetBandwidthRules extends UserCaseSupport<Void, List<BandwidthLimitRule>> {
+public class BandwidthRulesGetAll extends UserCaseSupport<Void, List<BandwidthLimitRule>> {
 
-    public GetBandwidthRules(ServiceRegistry serviceRegistry) {
+    public BandwidthRulesGetAll(ServiceRegistry serviceRegistry) {
         super(serviceRegistry);
     }
 
