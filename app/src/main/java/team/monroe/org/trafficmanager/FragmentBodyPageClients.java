@@ -42,9 +42,9 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
         return new ListPanelPresenter.DataViewResolver<StaticIpClient>() {
             @Override
             public View build(StaticIpClient staticIpClient, ViewGroup parent, LayoutInflater inflater) {
-                View view = inflater.inflate(R.layout.item_default, parent, false);
-                ((TextView)view.findViewById(R.id.text_caption)).setText("No name");
-                ((TextView)view.findViewById(R.id.text_description)).setText(staticIpClient.ipAddress+" : "+staticIpClient.mac);
+                View view = inflater.inflate(R.layout.item_client_edit, parent, false);
+                ((TextView)view.findViewById(R.id.text_caption)).setText(staticIpClient.mac);
+                ((TextView)view.findViewById(R.id.text_description)).setText(staticIpClient.ipAddress);
                 return view;
             }
         };
@@ -73,9 +73,11 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
     }
 
     private void fetch_staticIpClients() {
+        showLoading();
         application().data_staticIpClients.fetch(true, new Data.FetchObserver<List<StaticIpClient>>() {
             @Override
             public void onFetch(List<StaticIpClient> staticIpClients) {
+                showContent();
                 ui_updateClientList(staticIpClients);
             }
 
