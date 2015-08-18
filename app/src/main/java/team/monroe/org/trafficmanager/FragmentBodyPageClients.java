@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.monroe.team.android.box.data.Data;
 
@@ -42,6 +43,8 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
             @Override
             public View build(StaticIpClient staticIpClient, ViewGroup parent, LayoutInflater inflater) {
                 View view = inflater.inflate(R.layout.item_default, parent, false);
+                ((TextView)view.findViewById(R.id.text_caption)).setText("No name");
+                ((TextView)view.findViewById(R.id.text_description)).setText(staticIpClient.ipAddress+" : "+staticIpClient.mac);
                 return view;
             }
         };
