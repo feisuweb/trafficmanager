@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import org.monroe.team.android.box.data.Data;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
@@ -84,6 +86,12 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
             @Override
             public void onFetch(List<DeviceInfo> deviceInfoList) {
                 showContent();
+                Collections.sort(deviceInfoList, new Comparator<DeviceInfo>() {
+                    @Override
+                    public int compare(DeviceInfo lhs, DeviceInfo rhs) {
+                        return lhs.ipReservation.ip.compareTo(rhs.ipReservation.ip);
+                    }
+                });
                 mSingleClientPresenter.updateUI(deviceInfoList);
             }
 
