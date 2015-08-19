@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/panel_page_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:id="@+id/panel_issue"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="30dp"
+        >
+        <ImageView
+            android:id="@+id/issue_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/text_issue_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Issue Caption"
+            style="@style/Text.Caption"
+            />
+        <TextView
+            android:id="@+id/text_issue_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Big description to highlight whats happends"
+            style="@style/Text.Description"
+            />
+        <Button
+            android:id="@+id/action_issue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try Again"
+            android:layout_gravity="right"
+            style="@style/Button.Rect.Action"/>
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:id="@+id/panel_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp"
+        >
+        <ProgressBar
+            android:id="@+id/progress_loading"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="true"
+            />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/text_loading_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading"
+            style="@style/Text.Caption"
+            />
+        <TextView
+            android:id="@+id/text_loading_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading details please wait"
+            style="@style/Text.Description"
+            />
+    </LinearLayout>
+</RelativeLayout>

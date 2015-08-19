@@ -2,7 +2,7 @@ package team.monroe.org.trafficmanager;
 
 import android.os.Bundle;
 
-public abstract class FragmentDashboardBodyPage extends FragmentDashboardSupport {
+public abstract class FragmentDashboardBodyPage extends FragmentDashboardContentSupport {
 
     final public void onPageSelect(){
         updateHeader();
