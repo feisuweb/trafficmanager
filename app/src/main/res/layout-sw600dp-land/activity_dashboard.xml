@@ -33,4 +33,19 @@
         android:layout_height="fill_parent"
         android:background="@drawable/shadow_hor_right"
         />
+
+    <LinearLayout
+        android:id="@+id/layer_shadow"
+        android:background="#b2000000"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" />
+
+    <FrameLayout
+        android:id="@+id/frag_popup"
+        android:layout_margin="30dp"
+        android:layout_toRightOf="@+id/frag_dash_navigation"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
 </RelativeLayout>

@@ -10,13 +10,13 @@ import org.monroe.team.android.box.data.Data;
 
 import java.util.List;
 
-import team.monroe.org.trafficmanager.entities.StaticIpClient;
+import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.poc.ListPanelPresenter;
 
 public class FragmentBodyPageClients extends FragmentBodyPageDefault {
 
-    private Data.DataChangeObserver<List<StaticIpClient>> mStaticIpClientObserver;
-    private ListPanelPresenter<StaticIpClient> mSingleClientPresenter;
+    private Data.DataChangeObserver<List<DeviceInfo>> mStaticIpClientObserver;
+    private ListPanelPresenter<DeviceInfo> mSingleClientPresenter;
 
     @Override
     protected int getPanelLayoutId() {
@@ -31,20 +31,26 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSingleClientPresenter = new ListPanelPresenter<StaticIpClient>(
+        mSingleClientPresenter = new ListPanelPresenter<DeviceInfo>(
                 activity().getLayoutInflater(),
                 view(R.id.panel_single_instance_client, ViewGroup.class),
                 viewResolver_singleClientListView(),
                 viewResolver_defaultNoItems());
     }
 
-    private ListPanelPresenter.DataViewResolver<StaticIpClient> viewResolver_singleClientListView() {
-        return new ListPanelPresenter.DataViewResolver<StaticIpClient>() {
+    private ListPanelPresenter.DataViewResolver<DeviceInfo> viewResolver_singleClientListView() {
+        return new ListPanelPresenter.DataViewResolver<DeviceInfo>() {
             @Override
-            public View build(StaticIpClient staticIpClient, ViewGroup parent, LayoutInflater inflater) {
+            public View build(final DeviceInfo deviceInfo, ViewGroup parent, LayoutInflater inflater) {
                 View view = inflater.inflate(R.layout.item_client_edit, parent, false);
-                ((TextView)view.findViewById(R.id.text_caption)).setText(staticIpClient.mac);
-                ((TextView)view.findViewById(R.id.text_description)).setText(staticIpClient.ipAddress);
+                ((TextView)view.findViewById(R.id.text_caption)).setText(deviceInfo.getAlias(getResources()));
+                ((TextView)view.findViewById(R.id.text_description)).setText(deviceInfo.getDescription(getResources()));
+                view.findViewById(R.id.action_edit).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dashboard().dialog_editDeviceAlias(deviceInfo);
+                    }
+                });
                 return view;
             }
         };
@@ -54,31 +60,31 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
     @Override
     public void onStart() {
         super.onStart();
-        mStaticIpClientObserver = new Data.DataChangeObserver<List<StaticIpClient>>() {
+        mStaticIpClientObserver = new Data.DataChangeObserver<List<DeviceInfo>>() {
             @Override
             public void onDataInvalid() {
                 fetch_staticIpClients();
             }
             @Override
-            public void onData(List<StaticIpClient> staticIpClients) {}
+            public void onData(List<DeviceInfo> ipReservationAliases) {}
         };
-        application().data_staticIpClients.addDataChangeObserver(mStaticIpClientObserver);
+        application().data_devicesInfo.addDataChangeObserver(mStaticIpClientObserver);
         fetch_staticIpClients();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        application().data_staticIpClients.removeDataChangeObserver(mStaticIpClientObserver);
+        application().data_devicesInfo.removeDataChangeObserver(mStaticIpClientObserver);
     }
 
     private void fetch_staticIpClients() {
         showLoading();
-        application().data_staticIpClients.fetch(true, new Data.FetchObserver<List<StaticIpClient>>() {
+        application().data_devicesInfo.fetch(true, new Data.FetchObserver<List<DeviceInfo>>() {
             @Override
-            public void onFetch(List<StaticIpClient> staticIpClients) {
+            public void onFetch(List<DeviceInfo> deviceInfoList) {
                 showContent();
-                ui_updateClientList(staticIpClients);
+                mSingleClientPresenter.updateUI(deviceInfoList);
             }
 
             @Override
@@ -88,7 +94,4 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
         });
     }
 
-    private void ui_updateClientList(List<StaticIpClient> staticIpClients) {
-        mSingleClientPresenter.updateUI(staticIpClients);
-    }
 }

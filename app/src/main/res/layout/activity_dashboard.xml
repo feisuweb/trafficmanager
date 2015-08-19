@@ -25,6 +25,20 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"/>
 
+
+        <LinearLayout
+            android:id="@+id/layer_shadow"
+            android:background="#b2000000"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" />
+
+        <FrameLayout
+            android:id="@+id/frag_popup"
+            android:layout_margin="30dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+
     </RelativeLayout>
 
     <!-- The navigation drawer -->

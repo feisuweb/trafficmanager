@@ -4,32 +4,31 @@ import org.monroe.team.corebox.services.ServiceRegistry;
 import org.monroe.team.corebox.uc.UserCaseSupport;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
-import team.monroe.org.trafficmanager.entities.StaticIpClient;
+import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.exceptions.NoConfigurationIssue;
 import team.monroe.org.trafficmanager.manage.ObjectManager;
 import team.monroe.org.trafficmanager.manage.RouterManager;
 
-public class StaticIpClientsGetAll extends UserCaseSupport<Void, List<StaticIpClient>> {
+public class IpReservationGetAll extends UserCaseSupport<Void, List<IpReservation>> {
 
-    public StaticIpClientsGetAll(ServiceRegistry serviceRegistry) {
+    public IpReservationGetAll(ServiceRegistry serviceRegistry) {
         super(serviceRegistry);
     }
 
     @Override
-    protected List<StaticIpClient> executeImpl(Void request) {
+    protected List<IpReservation> executeImpl(Void request) {
         ConnectionConfiguration configuration = using(ObjectManager.class).getConnectionConfiguration();
         if (configuration == null) {
             throw new NoConfigurationIssue();
         }
         List<RouterManager.DhcpReservedIpDetail> dhcpReservedIpDetailList = using(RouterManager.class).dhcpIpReservationList(configuration);
-        List<StaticIpClient> answer = new ArrayList<>();
+        List<IpReservation> answer = new ArrayList<>();
         for (RouterManager.DhcpReservedIpDetail dhcpReservedIpDetail : dhcpReservedIpDetailList) {
             if (dhcpReservedIpDetail.enabled){
-                StaticIpClient ipClient = new StaticIpClient(dhcpReservedIpDetail.ip, null, dhcpReservedIpDetail.mac);
+                IpReservation ipClient = new IpReservation(dhcpReservedIpDetail.ip, dhcpReservedIpDetail.mac);
                 answer.add(ipClient);
             }
         }

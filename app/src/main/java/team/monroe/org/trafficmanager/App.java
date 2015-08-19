@@ -3,21 +3,29 @@ package team.monroe.org.trafficmanager;
 import org.monroe.team.android.box.app.ApplicationSupport;
 import org.monroe.team.android.box.data.Data;
 import org.monroe.team.android.box.utils.AndroidLogImplementation;
+import org.monroe.team.android.box.utils.ExceptionsUtils;
 import org.monroe.team.corebox.log.L;
+import org.monroe.team.corebox.utils.P;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
-import team.monroe.org.trafficmanager.entities.StaticIpClient;
+import team.monroe.org.trafficmanager.entities.DeviceAlias;
+import team.monroe.org.trafficmanager.entities.DeviceInfo;
+import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.uc.BandwidthRulesGetAll;
+import team.monroe.org.trafficmanager.uc.DeviceAliasAdd;
+import team.monroe.org.trafficmanager.uc.DeviceAliasGet;
+import team.monroe.org.trafficmanager.uc.IpReservationGetAll;
 import team.monroe.org.trafficmanager.uc.RouterConnectionConfigurationSave;
-import team.monroe.org.trafficmanager.uc.StaticIpClientsGetAll;
 
 public class App extends ApplicationSupport<AppModel> {
 
     public Data<List<BandwidthLimitRule>> data_bandwidthLimitRules;
-    public Data<List<StaticIpClient>> data_staticIpClients;
+    public Data<List<DeviceInfo>> data_devicesInfo;
+    public Data<List<IpReservation>> data_ipReservation;
 
     static {
         L.setup(new AndroidLogImplementation());
@@ -36,10 +44,38 @@ public class App extends ApplicationSupport<AppModel> {
                 return model().execute(BandwidthRulesGetAll.class, null);
             }
         };
-        data_staticIpClients = new Data<List<StaticIpClient>>(model()) {
+
+        data_ipReservation = new Data<List<IpReservation>>(model()) {
             @Override
-            protected List<StaticIpClient> provideData() {
-                return model().execute(StaticIpClientsGetAll.class, null);
+            protected List<IpReservation> provideData() {
+                return model().execute(IpReservationGetAll.class, null);
+            }
+        };
+
+        data_ipReservation.addDataChangeObserver(new Data.DataChangeObserver<List<IpReservation>>() {
+            @Override
+            public void onDataInvalid() {
+                data_devicesInfo.invalidate();
+            }
+            @Override
+            public void onData(List<IpReservation> ipReservations) {}
+        });
+
+        data_devicesInfo = new Data<List<DeviceInfo>>(model()) {
+            @Override
+            protected List<DeviceInfo> provideData() {
+                try {
+                    List<IpReservation> reservations = data_ipReservation.fetch();
+                    List<DeviceInfo> answer = new ArrayList<>();
+                    for (IpReservation reservation : reservations) {
+                        DeviceAlias alias = model().execute(DeviceAliasGet.class, reservation.mac);
+                        answer.add(new DeviceInfo(alias, reservation));
+                    }
+                    return answer;
+                } catch (FetchException e) {
+                    Throwable throwable = ExceptionsUtils.resolveDataFetchException(e);
+                    throw ExceptionsUtils.asRuntime(throwable);
+                }
             }
         };
     }
@@ -50,5 +86,15 @@ public class App extends ApplicationSupport<AppModel> {
 
     public void function_routerConfigurationSave(ConnectionConfiguration connectionConfiguration, ValueObserver<Void> observer) {
        fetchValue(RouterConnectionConfigurationSave.class,connectionConfiguration,new NoOpValueAdapter<Void>(),observer);
+    }
+
+    public void function_updateDeviceAlias(String mac, DeviceAlias alias, ValueObserver<DeviceAlias> observer) {
+       fetchValue(DeviceAliasAdd.class, new P<String, DeviceAlias>(mac, alias), new NoOpValueAdapter<DeviceAlias>(){
+           @Override
+           public DeviceAlias adapt(DeviceAlias value) {
+               data_devicesInfo.invalidate();
+               return super.adapt(value);
+           }
+       }, observer);
     }
 }

@@ -2,11 +2,22 @@ package team.monroe.org.trafficmanager;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 
 import org.monroe.team.android.box.app.ActivitySupport;
+import org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceController;
+
+import team.monroe.org.trafficmanager.entities.DeviceInfo;
+import team.monroe.org.trafficmanager.entities.IpReservation;
+
+import static org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceControllerBuilder.*;
 
 
 public class ActivityDashboard extends ActivitySupport<App> {
+
+    private View mLayerShadow;
+    private AppearanceController ac_layerShadow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +30,52 @@ public class ActivityDashboard extends ActivitySupport<App> {
                        .add(R.id.frag_dash_navigation, new FragmentDashboardNavigation())
                        .add(R.id.frag_dash_body, new FragmentDashboardMultiPage())
                     .commit();
+        }
+
+        mLayerShadow = view(R.id.layer_shadow);
+        mLayerShadow.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+        ac_layerShadow = animateAppearance(mLayerShadow, alpha(1f,0f))
+                .hideAndGone()
+                .showAnimation(duration_constant(300),interpreter_decelerate(0.5f))
+                .hideAnimation(duration_constant(300),interpreter_accelerate(0.5f))
+                .build();
+
+        if (getFragmentManager().findFragmentById(R.id.frag_popup) == null){
+            visibility_shadow(false, false);
+        }else {
+            visibility_shadow(true, false);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        ContractBackButton backButtonContractAware = (ContractBackButton) getFragmentManager().findFragmentById(R.id.frag_popup);
+        if (backButtonContractAware != null){
+            if (backButtonContractAware.onBackPressed()){
+                return;
+            }
+        }
+        super.onBackPressed();
+    }
+
+    private void visibility_shadow(boolean visible, boolean animate) {
+        if (animate){
+            if (visible){
+                ac_layerShadow.show();
+            }else {
+                ac_layerShadow.hide();
+            }
+        }else {
+            if (visible){
+                ac_layerShadow.showWithoutAnimation();
+            }else {
+                ac_layerShadow.hideWithoutAnimation();
+            }
         }
     }
 
@@ -104,6 +161,23 @@ public class ActivityDashboard extends ActivitySupport<App> {
 
     public void open_mainSlider() {
         replaceBody(new FragmentDashboardMultiPage(), animation_slide_from_right());
+    }
+
+    public void dialog_editDeviceAlias(DeviceInfo deviceInfo) {
+        visibility_shadow(true, true);
+        FragmentDialogEditIpReservationAlias fragment = new FragmentDialogEditIpReservationAlias();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(DeviceInfo.class.getName(), deviceInfo);
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .add(R.id.frag_popup, fragment)
+                .commit();
+    }
+
+    public void dialog_close() {
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.frag_popup);
+        getFragmentManager().beginTransaction().remove(fragment).commit();
+        visibility_shadow(false, true);
     }
 
 
