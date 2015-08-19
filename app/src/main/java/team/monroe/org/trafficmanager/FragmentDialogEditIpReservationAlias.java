@@ -10,7 +10,6 @@ import org.monroe.team.android.box.app.ApplicationSupport;
 
 import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
-import team.monroe.org.trafficmanager.entities.IpReservation;
 
 public class FragmentDialogEditIpReservationAlias extends FragmentDashboardDialog {
 

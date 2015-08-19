@@ -8,6 +8,8 @@ import org.monroe.team.corebox.log.L;
 import org.monroe.team.corebox.utils.P;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
@@ -71,6 +73,12 @@ public class App extends ApplicationSupport<AppModel> {
                         DeviceAlias alias = model().execute(DeviceAliasGet.class, reservation.mac);
                         answer.add(new DeviceInfo(alias, reservation));
                     }
+                    Collections.sort(answer, new Comparator<DeviceInfo>() {
+                        @Override
+                        public int compare(DeviceInfo lhs, DeviceInfo rhs) {
+                            return lhs.getAlias(getResources()).compareTo(rhs.getAlias(getResources()));
+                        }
+                    });
                     return answer;
                 } catch (FetchException e) {
                     Throwable throwable = ExceptionsUtils.resolveDataFetchException(e);
