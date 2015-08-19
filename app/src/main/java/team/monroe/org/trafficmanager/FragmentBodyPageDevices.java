@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.monroe.team.android.box.data.Data;
@@ -15,7 +16,7 @@ import java.util.List;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.poc.ListPanelPresenter;
 
-public class FragmentBodyPageClients extends FragmentBodyPageDefault {
+public class FragmentBodyPageDevices extends FragmentBodyPageDefault {
 
     private Data.DataChangeObserver<List<DeviceInfo>> mStaticIpClientObserver;
     private ListPanelPresenter<DeviceInfo> mSingleClientPresenter;
@@ -27,7 +28,7 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
 
     @Override
     protected ActivityDashboard.BodyPageId getPageId() {
-        return ActivityDashboard.BodyPageId.CLIENTS;
+        return ActivityDashboard.BodyPageId.DEVICES;
     }
 
     @Override
@@ -47,6 +48,7 @@ public class FragmentBodyPageClients extends FragmentBodyPageDefault {
                 View view = inflater.inflate(R.layout.item_client_edit, parent, false);
                 ((TextView)view.findViewById(R.id.text_caption)).setText(deviceInfo.getAlias(getResources()));
                 ((TextView)view.findViewById(R.id.text_description)).setText(deviceInfo.getDescription(getResources()));
+                ((ImageView)view.findViewById(R.id.image)).setImageResource(deviceInfo.getImageResourceId());
                 view.findViewById(R.id.action_edit).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -3,17 +3,24 @@ package team.monroe.org.trafficmanager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.monroe.team.android.box.app.ApplicationSupport;
+import org.monroe.team.android.box.app.ui.GenericListViewAdapter;
+import org.monroe.team.android.box.app.ui.GetViewImplementation;
 
 import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
+import team.monroe.org.trafficmanager.entities.DeviceType;
 
-public class FragmentDialogEditIpReservationAlias extends FragmentDashboardDialog {
+public class FragmentDialogAliasEdit extends FragmentDashboardDialog {
 
     private DeviceInfo mDeviceInfo;
+    private Spinner mSpinnerDeviceType;
+    private GenericListViewAdapter<DeviceType, GetViewImplementation.ViewHolder<DeviceType>> mDeviceTypeAdapter;
 
     @Override
     protected int getDialogContent() {
@@ -42,6 +49,35 @@ public class FragmentDialogEditIpReservationAlias extends FragmentDashboardDialo
                 onSaveChanges();
             }
         });
+        mSpinnerDeviceType = view(R.id.spinner_device_type, Spinner.class);
+        mDeviceTypeAdapter = new GenericListViewAdapter<DeviceType, GetViewImplementation.ViewHolder<DeviceType>>(
+                getActivity(),
+                new GetViewImplementation.ViewHolderFactory<GetViewImplementation.ViewHolder<DeviceType>>() {
+                    @Override
+                    public GetViewImplementation.ViewHolder<DeviceType> create(final View convertView) {
+                        return new GetViewImplementation.GenericViewHolder<DeviceType>() {
+
+                            ImageView imageView = (ImageView) convertView.findViewById(R.id.image);
+                            TextView captionView = (TextView) convertView.findViewById(R.id.text_caption);
+
+                            @Override
+                            public void update(DeviceType deviceType, int position) {
+                                imageView.setImageResource(deviceType.drawableId);
+                                captionView.setText(deviceType.title);
+                            }
+                        };
+                    }
+                },
+                R.layout.item_device_type);
+        mSpinnerDeviceType.setAdapter(mDeviceTypeAdapter);
+        mDeviceTypeAdapter.addAll(DeviceType.values());
+        mDeviceTypeAdapter.notifyDataSetChanged();
+        if (mDeviceInfo.deviceAlias == null){
+            mSpinnerDeviceType.setSelection(0);
+        }else {
+            mSpinnerDeviceType.setSelection(mDeviceInfo.deviceAlias.icon);
+            view(R.id.edit_alias, EditText.class).setText(mDeviceInfo.deviceAlias.alias);
+        }
     }
 
     private void onSaveChanges() {
@@ -52,8 +88,9 @@ public class FragmentDialogEditIpReservationAlias extends FragmentDashboardDialo
         }
         visibility_actionClose(false);
         showLoading();
+        int selected = mSpinnerDeviceType.getSelectedItemPosition();
         application().function_updateDeviceAlias(mDeviceInfo.ipReservation.mac,
-                new DeviceAlias(alias, 0),
+                new DeviceAlias(alias, selected),
                 new ApplicationSupport.ValueObserver<DeviceAlias>() {
             @Override
             public void onSuccess(DeviceAlias alias) {

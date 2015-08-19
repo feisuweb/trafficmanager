@@ -21,4 +21,8 @@ public class DeviceInfo implements Serializable {
     public String getDescription(Resources resources) {
         return ipReservation.mac+" ( ip: "+ ipReservation.ip+")";
     }
+
+    public int getImageResourceId() {
+        return DeviceType.by(deviceAlias == null ? 0 : deviceAlias.icon).drawableId;
+    }
 }

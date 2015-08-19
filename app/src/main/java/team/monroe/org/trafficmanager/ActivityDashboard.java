@@ -9,7 +9,6 @@ import org.monroe.team.android.box.app.ActivitySupport;
 import org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceController;
 
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
-import team.monroe.org.trafficmanager.entities.IpReservation;
 
 import static org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceControllerBuilder.*;
 
@@ -141,8 +140,8 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 title = "Bandwidth Limits";
                 icon = R.drawable.android_components;
                 break;
-            case CLIENTS:
-                title = "Client Aliases";
+            case DEVICES:
+                title = "Devices";
                 icon = R.drawable.android_devices;
                 break;
             case  BANDWIDTH_PROFILES:
@@ -165,7 +164,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
 
     public void dialog_editDeviceAlias(DeviceInfo deviceInfo) {
         visibility_shadow(true, true);
-        FragmentDialogEditIpReservationAlias fragment = new FragmentDialogEditIpReservationAlias();
+        FragmentDialogAliasEdit fragment = new FragmentDialogAliasEdit();
         Bundle bundle = new Bundle();
         bundle.putSerializable(DeviceInfo.class.getName(), deviceInfo);
         fragment.setArguments(bundle);
@@ -193,7 +192,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
     }
 
     public static enum BodyPageId{
-        ROUTER_CONFIGURATION, BANDWIDTH_LIMITS, BANDWIDTH_PROFILES, CLIENTS
+        ROUTER_CONFIGURATION, BANDWIDTH_LIMITS, BANDWIDTH_PROFILES, DEVICES
     }
 
     public static class BodyPageInfo{

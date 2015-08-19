@@ -20,10 +20,6 @@ public class DeviceAliasGet extends UserCaseSupport<String, DeviceAlias> {
     @Override
     protected DeviceAlias executeImpl(String request) {
         DeviceAlias alias = using(DeviceAliasManager.class).get(request);
-        //TODO: fallback maybe not so good idea
-        if (alias == null){
-            alias = new DeviceAlias(request, 0);
-        }
         return alias;
     }
 

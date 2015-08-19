@@ -39,7 +39,7 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
             private Fragment createFragment(int position) {
                 switch (position){
                     case 0: return new FragmentBodyPageBandwidthLimits();
-                    case 1: return new FragmentBodyPageClients();
+                    case 1: return new FragmentBodyPageDevices();
                     default:
                         throw new IllegalStateException();
                 }
