@@ -45,9 +45,10 @@ public class FragmentBodyPageDevices extends FragmentBodyPageDefault {
         return new ListPanelPresenter.DataViewResolver<DeviceInfo>() {
             @Override
             public View build(final DeviceInfo deviceInfo, ViewGroup parent, LayoutInflater inflater) {
-                View view = inflater.inflate(R.layout.item_client_edit, parent, false);
+                View view = inflater.inflate(R.layout.item_device, parent, false);
                 ((TextView)view.findViewById(R.id.text_caption)).setText(deviceInfo.getAlias(getResources()));
-                ((TextView)view.findViewById(R.id.text_description)).setText(deviceInfo.getDescription(getResources()));
+                ((TextView)view.findViewById(R.id.text_mac)).setText(deviceInfo.ipReservation.mac);
+                ((TextView)view.findViewById(R.id.text_ip)).setText(deviceInfo.ipReservation.ip);
                 ((ImageView)view.findViewById(R.id.image)).setImageResource(deviceInfo.getImageResourceId());
                 view.findViewById(R.id.action_edit).setOnClickListener(new View.OnClickListener() {
                     @Override

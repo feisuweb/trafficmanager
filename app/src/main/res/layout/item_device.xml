@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/android_computer_transperent"
         android:layout_marginRight="10dp"
         />
@@ -27,10 +27,17 @@
             style="@style/Text"/>
 
         <TextView
-            android:id="@+id/text_description"
+            android:id="@+id/text_ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Description"
+            android:text="ip"
+            style="@style/Text.Description"/>
+
+        <TextView
+            android:id="@+id/text_mac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mac"
             style="@style/Text.Description"/>
     </LinearLayout>
 
