@@ -13,10 +13,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
+import team.monroe.org.trafficmanager.entities.BandwidthProfile;
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
 import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.entities.IpReservation;
+import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
 import team.monroe.org.trafficmanager.uc.BandwidthRulesGetAll;
 import team.monroe.org.trafficmanager.uc.DeviceAliasAdd;
 import team.monroe.org.trafficmanager.uc.DeviceAliasGet;
@@ -25,13 +27,15 @@ import team.monroe.org.trafficmanager.uc.RouterConnectionConfigurationSave;
 
 public class App extends ApplicationSupport<AppModel> {
 
-    public Data<List<BandwidthLimitRule>> data_bandwidthLimitRules;
-    public Data<List<DeviceInfo>> data_devicesInfo;
-    public Data<List<IpReservation>> data_ipReservation;
-
     static {
         L.setup(new AndroidLogImplementation());
     }
+
+    public Data<List<BandwidthLimitRule>> data_bandwidthLimitRules;
+    public Data<List<DeviceInfo>> data_devicesInfo;
+    public Data<List<IpReservation>> data_ipReservation;
+    public Data<List<BandwidthProfile>> data_bandwidthProfiles;
+
     @Override
     protected AppModel createModel() {
         return new AppModel("route_manager", this);
@@ -44,6 +48,13 @@ public class App extends ApplicationSupport<AppModel> {
             @Override
             protected List<BandwidthLimitRule> provideData() {
                 return model().execute(BandwidthRulesGetAll.class, null);
+            }
+        };
+
+        data_bandwidthProfiles = new Data<List<BandwidthProfile>>(model()) {
+            @Override
+            protected List<BandwidthProfile> provideData() {
+                return model().execute(BandwidthProfileGetAll.class, null);
             }
         };
 

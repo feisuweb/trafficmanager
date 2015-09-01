@@ -10,6 +10,7 @@ import org.monroe.team.corebox.services.ServiceRegistry;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.IpReservation;
+import team.monroe.org.trafficmanager.manage.BandwidthProfileManager;
 import team.monroe.org.trafficmanager.manage.DeviceAliasManager;
 import team.monroe.org.trafficmanager.manage.ObjectManager;
 import team.monroe.org.trafficmanager.manage.RouterManager;
@@ -30,6 +31,7 @@ public class AppModel extends AndroidModel {
         serviceRegistry.registrate(RouterManager.class, routerManager);
         serviceRegistry.registrate(DeviceAliasManager.class, new DeviceAliasManager(context));
         serviceRegistry.registrate(ObjectManager.class, new ObjectManager(context));
+        serviceRegistry.registrate(BandwidthProfileManager.class, new BandwidthProfileManager(context));
 
 
     }
