@@ -146,7 +146,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 break;
             case  BANDWIDTH_PROFILES:
                 title = "Bandwidth Profiles";
-                icon = R.drawable.android_style;
+                icon = R.drawable.android_tune;
                 break;
             default:
                 throw new IllegalStateException("Unsupported");

@@ -40,6 +40,7 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
                 switch (position){
                     case 0: return new FragmentBodyPageBandwidthLimits();
                     case 1: return new FragmentBodyPageDevices();
+                    case 2: return new FragmentBodyPageBandwidthProfiles();
                     default:
                         throw new IllegalStateException();
                 }
@@ -53,7 +54,7 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
 
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
         };
         mViewPager.setAdapter(mFragmentPagerAdapter);
