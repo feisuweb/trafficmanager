@@ -28,4 +28,8 @@ public class BandwidthProfileManager {
     public void updateOrCreate(BandwidthProfile request) {
         serializationMap.put(request.title, request);
     }
+
+    public BandwidthProfile delete(BandwidthProfile firstProfile) {
+        return serializationMap.remove(firstProfile.title);
+    }
 }

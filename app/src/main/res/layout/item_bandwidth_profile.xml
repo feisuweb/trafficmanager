@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:gravity="center_vertical">
+
+
+    <ImageButton
+        android:id="@+id/action_edit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/android_edit"
+        style="@style/Button.Round.Action"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Caption"
+            style="@style/Text.Caption"/>
+
+        <TextView
+            android:id="@+id/text_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:singleLine="false"
+            style="@style/Text.Description"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/android_swap_hor"/>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2">
+        <TextView
+            android:text="In limit"
+            style="@style/Text.Description"/>
+        <TextView
+            android:id="@+id/text_in_limit"
+            android:layout_marginLeft="5dp"
+            android:text="30 kbps"
+            style="@style/Text"/>
+        <TextView
+            android:text="Out limit"
+            style="@style/Text.Description"/>
+        <TextView
+            android:id="@+id/text_out_limit"
+            android:layout_marginLeft="5dp"
+            android:text="10 kbps"
+            style="@style/Text"/>
+    </GridLayout>
+    <ImageButton
+        android:id="@+id/action_trash"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/android_trash"
+        style="@style/Button.Round.Action"/>
+
+</LinearLayout>

@@ -64,19 +64,35 @@ public class FragmentDialogBandwidthProfileEdit extends FragmentDashboardDialog 
         visibility_actionClose(false);
         showLoading();
         BandwidthProfile bandwidthProfile = new BandwidthProfile(title, description, Integer.parseInt(inLimit), Integer.parseInt(outLimit));
-        application().function_addBandwidthProfile(bandwidthProfile,
-                new ApplicationSupport.ValueObserver<BandwidthProfile>() {
-                    @Override
-                    public void onSuccess(BandwidthProfile alias) {
-                        dashboard().dialog_close();
-                    }
+        if (mProfile == null) {
+            application().function_addBandwidthProfile(bandwidthProfile,
+                    new ApplicationSupport.ValueObserver<BandwidthProfile>() {
+                        @Override
+                        public void onSuccess(BandwidthProfile alias) {
+                            dashboard().dialog_close();
+                        }
 
-                    @Override
-                    public void onFail(Throwable exception) {
-                        visibility_actionClose(true);
-                        handleException(exception);
-                    }
-                });
+                        @Override
+                        public void onFail(Throwable exception) {
+                            visibility_actionClose(true);
+                            handleException(exception);
+                        }
+                    });
+        }else {
+            application().function_updateBandwidthProfile(mProfile, bandwidthProfile,
+                    new ApplicationSupport.ValueObserver<BandwidthProfile>() {
+                        @Override
+                        public void onSuccess(BandwidthProfile alias) {
+                            dashboard().dialog_close();
+                        }
+
+                        @Override
+                        public void onFail(Throwable exception) {
+                            visibility_actionClose(true);
+                            handleException(exception);
+                        }
+                    });
+        }
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.monroe.team.android.box.app.ApplicationSupport;
 import org.monroe.team.android.box.data.Data;
 
 import java.util.Collections;
@@ -49,10 +50,34 @@ public class FragmentBodyPageBandwidthProfiles extends FragmentBodyPageDefault {
     private ListPanelPresenter.DataViewResolver<BandwidthProfile> viewResolver_profile() {
         return new ListPanelPresenter.DataViewResolver<BandwidthProfile>() {
             @Override
-            public View build(BandwidthProfile profile, ViewGroup parent, LayoutInflater inflater) {
-                View view = inflater.inflate(R.layout.item_default, parent, false);
+            public View build(final BandwidthProfile profile, ViewGroup parent, LayoutInflater inflater) {
+                View view = inflater.inflate(R.layout.item_bandwidth_profile, parent, false);
                 ((TextView)view.findViewById(R.id.text_caption)).setText(profile.title);
                 ((TextView)view.findViewById(R.id.text_description)).setText(profile.description);
+                ((TextView)view.findViewById(R.id.text_in_limit)).setText(Integer.toString(profile.inLimit)+" kbps");
+                ((TextView)view.findViewById(R.id.text_out_limit)).setText(Integer.toString(profile.outLimit)+" kbps");
+                view.findViewById(R.id.action_edit).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dashboard().dialog_editBandwidthProfile(profile);
+                    }
+                });
+                view.findViewById(R.id.action_trash).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showLoading();
+                        application().function_deleteBandwidthProfile(profile,new ApplicationSupport.ValueObserver<Void>() {
+                            @Override
+                            public void onSuccess(Void value) {
+                            }
+
+                            @Override
+                            public void onFail(Throwable exception) {
+                               handleException(exception);
+                            }
+                        });
+                    }
+                });
                 return view;
             }
         };

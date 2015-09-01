@@ -19,7 +19,9 @@ import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileAddNew;
+import team.monroe.org.trafficmanager.uc.BandwidthProfileDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
+import team.monroe.org.trafficmanager.uc.BandwidthProfileUpdate;
 import team.monroe.org.trafficmanager.uc.BandwidthRulesGetAll;
 import team.monroe.org.trafficmanager.uc.DeviceAliasAdd;
 import team.monroe.org.trafficmanager.uc.DeviceAliasGet;
@@ -120,5 +122,25 @@ public class App extends ApplicationSupport<AppModel> {
                         return value;
                     }
                 }, observer);
-        }
+    }
+
+    public void function_updateBandwidthProfile(BandwidthProfile oldBandwidthProfile, BandwidthProfile newBandwidthProfile, ValueObserver<BandwidthProfile> observer) {
+        fetchValue(BandwidthProfileUpdate.class, new P<BandwidthProfile, BandwidthProfile>(oldBandwidthProfile,newBandwidthProfile), new NoOpValueAdapter<BandwidthProfile>(){
+            @Override
+            public BandwidthProfile adapt(BandwidthProfile value) {
+                data_bandwidthProfiles.invalidate();
+                return value;
+            }
+        }, observer);
+    }
+
+    public void function_deleteBandwidthProfile(BandwidthProfile profile, ValueObserver<Void> observer) {
+        fetchValue(BandwidthProfileDelete.class, profile, new ValueAdapter<BandwidthProfile, Void>() {
+            @Override
+            public Void adapt(BandwidthProfile value) {
+                data_bandwidthProfiles.invalidate();
+                return null;
+            }
+        }, observer);
+    }
 }
