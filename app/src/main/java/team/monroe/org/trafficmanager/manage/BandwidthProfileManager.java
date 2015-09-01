@@ -20,4 +20,12 @@ public class BandwidthProfileManager {
     public List<BandwidthProfile> getAll() {
         return new ArrayList<>(serializationMap.values());
     }
+
+    public BandwidthProfile get(String title) {
+        return serializationMap.get(title);
+    }
+
+    public void updateOrCreate(BandwidthProfile request) {
+        serializationMap.put(request.title, request);
+    }
 }

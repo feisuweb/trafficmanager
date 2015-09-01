@@ -10,7 +10,7 @@
         android:text="Following section allows you to create bandwidth profiles which contains from speed limits. Please note that you couldn`t change or remove profile if it currently in use"
         style="@style/Text.Description"/>
 
-    <LinearLayout
+      <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         style="@style/Panel.Back"

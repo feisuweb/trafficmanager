@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.monroe.team.android.box.data.Data;
@@ -14,7 +13,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import team.monroe.org.trafficmanager.entities.BandwidthProfile;
-import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.poc.ListPanelPresenter;
 
 public class FragmentBodyPageBandwidthProfiles extends FragmentBodyPageDefault {
@@ -40,6 +38,12 @@ public class FragmentBodyPageBandwidthProfiles extends FragmentBodyPageDefault {
                 view(R.id.panel_single_instance_client, ViewGroup.class),
                 viewResolver_profile(),
                 viewResolver_defaultNoItems());
+        view(R.id.action_add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dashboard().dialog_editBandwidthProfile(null);
+            }
+        });
     }
 
     private ListPanelPresenter.DataViewResolver<BandwidthProfile> viewResolver_profile() {

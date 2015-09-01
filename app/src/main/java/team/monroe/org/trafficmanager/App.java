@@ -18,6 +18,7 @@ import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
 import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.entities.IpReservation;
+import team.monroe.org.trafficmanager.uc.BandwidthProfileAddNew;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
 import team.monroe.org.trafficmanager.uc.BandwidthRulesGetAll;
 import team.monroe.org.trafficmanager.uc.DeviceAliasAdd;
@@ -110,4 +111,14 @@ public class App extends ApplicationSupport<AppModel> {
            }
        }, observer);
     }
+
+    public void function_addBandwidthProfile(BandwidthProfile bandwidthProfile, ValueObserver<BandwidthProfile> observer) {
+                fetchValue(BandwidthProfileAddNew.class, bandwidthProfile, new NoOpValueAdapter<BandwidthProfile>(){
+                    @Override
+                    public BandwidthProfile adapt(BandwidthProfile value) {
+                        data_bandwidthProfiles.invalidate();
+                        return value;
+                    }
+                }, observer);
+        }
 }

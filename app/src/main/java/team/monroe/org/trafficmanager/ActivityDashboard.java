@@ -8,6 +8,7 @@ import android.view.View;
 import org.monroe.team.android.box.app.ActivitySupport;
 import org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceController;
 
+import team.monroe.org.trafficmanager.entities.BandwidthProfile;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 
 import static org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceControllerBuilder.*;
@@ -173,11 +174,23 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 .commit();
     }
 
+    public void dialog_editBandwidthProfile(BandwidthProfile profile) {
+        visibility_shadow(true, true);
+        FragmentDialogBandwidthProfileEdit fragment = new FragmentDialogBandwidthProfileEdit();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(BandwidthProfile.class.getName(), profile);
+        fragment.setArguments(bundle);
+        getFragmentManager().beginTransaction()
+                .add(R.id.frag_popup, fragment)
+                .commit();
+    }
+
     public void dialog_close() {
         Fragment fragment = getFragmentManager().findFragmentById(R.id.frag_popup);
         getFragmentManager().beginTransaction().remove(fragment).commit();
         visibility_shadow(false, true);
     }
+
 
 
     public static class FragmentTransitionSet{
