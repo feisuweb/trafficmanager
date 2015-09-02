@@ -7,11 +7,14 @@ import org.monroe.team.corebox.utils.P;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
+import team.monroe.org.trafficmanager.entities.ProtocolClass;
 import team.monroe.org.trafficmanager.exceptions.HttpIssue;
 import team.monroe.org.trafficmanager.exceptions.IssuesCodes;
 
@@ -19,6 +22,8 @@ public class RouterManager {
 
     private final HttpManager httpManager;
     private static final Pattern pattern_topLevelDhcpList = Pattern.compile(".*var *dhcpList *= *new *Array *\\(([^)]*).*",
+            Pattern.MULTILINE|Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
+    private static final Pattern pattern_topLevelBandwidthLimitRules = Pattern.compile(".*var *QoSRuleListArray *= *new *Array *\\(([^)]*).*",
             Pattern.MULTILINE|Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
 
     public RouterManager(HttpManager httpManager) {
@@ -75,6 +80,93 @@ public class RouterManager {
         }
         return body;
     }
+
+    public List<BandwidthLimitRule> bandwidthLimitRules(ConnectionConfiguration configuration) {
+        List<BandwidthLimitRule> answer = new ArrayList<>();
+        int page = 1;
+        HashSet<String> ruleIdSet = new HashSet<>();
+        while (true){
+            String pageText = doGetRequest(
+                    configuration.buildUrl("userRpm/QoSRuleListRpm.htm",
+                    new P<String, Object>("Page", page)),
+                    configuration.user, configuration.password);
+            Matcher matcher = pattern_topLevelBandwidthLimitRules.matcher(pageText);
+            matcher.matches();
+            String bandwidthLimitRulesString  = matcher.group(1);
+            String[] itParsed = bandwidthLimitRulesString.split(",");
+            /*
+            101, "192.168.0.5 - 192.168.0.6/1 - 65535/TCP", 0, 1, 0, 1, 0, 1,
+            65637, "192.168.0.10/1 - 60000", 0, 1, 0, 1, 0, 0,
+                                                 out     in
+            131173, "192.168.0.21/1 - 65535", 0, 64, 32, 65, 33, 0,
+             */
+            for (int i =0; i < itParsed.length - 8; i+=8){
+                String id = itParsed[i].trim();
+                if (ruleIdSet.contains(id)) return answer;
+                ruleIdSet.add(id);
+                String[] ipPortProtocolString = itParsed[i+1]
+                        .replace('"',' ')
+                        .replaceAll(" +","")
+                        .trim().split("/");
+                String[] ips = splitIPs(ipPortProtocolString[0]);
+                int[] ports;
+                ProtocolClass protocol;
+                if (ipPortProtocolString.length > 1){
+                    protocol = splitProtocol(ipPortProtocolString[1]);
+                    if(protocol == null){
+                        ports = splitPorts(ipPortProtocolString[1]);
+                        if (ipPortProtocolString.length > 2){
+                            protocol = splitProtocol(ipPortProtocolString[2]);
+                        }else {
+                            protocol = ProtocolClass.ALL;
+                        }
+                    }else {
+                        ports = new int[]{0,0};
+                    }
+                }else {
+                    protocol = ProtocolClass.ALL;
+                    ports = new int[]{0,0};
+                }
+
+                int outMax = Integer.parseInt(itParsed[i+3].trim());
+                int outMin = Integer.parseInt(itParsed[i+4].trim());
+                int inMax = Integer.parseInt(itParsed[i+5].trim());
+                int inMin = Integer.parseInt(itParsed[i+6].trim());
+                boolean enabled = "1".equals(itParsed[i+7].trim());
+                answer.add(new BandwidthLimitRule(id,ips[0],ips[1],ports[0],ports[1],enabled,inMax,inMin,outMax, outMin, protocol));
+            }
+            page++;
+        }
+    }
+
+    private int[] splitPorts(String portString) {
+        String[] ipParsed = portString.split("-");
+        if (ipParsed.length == 2){
+            return new int[]{Integer.parseInt(ipParsed[0]),Integer.parseInt(ipParsed[1])};
+        }else {
+            return new int[]{Integer.parseInt(ipParsed[0]),Integer.parseInt(ipParsed[0])};
+        }
+    }
+
+    private ProtocolClass splitProtocol(String protocolString) {
+        if (protocolString.toUpperCase().equals(ProtocolClass.TCP.name())){
+            return ProtocolClass.TCP;
+        }else if (protocolString.toUpperCase().equals(ProtocolClass.UDP.name())){
+            return ProtocolClass.UDP;
+        }else {
+            return null;
+        }
+    }
+
+    private String[] splitIPs(String ipString) {
+        String[] ipParsed = ipString.split("-");
+        if (ipParsed.length == 2){
+            return new String[]{ipParsed[0],ipParsed[1]};
+        }else {
+            return new String[]{ipParsed[0],ipParsed[0]};
+        }
+    }
+
 
     public static class DhcpReservedIpDetail{
 
