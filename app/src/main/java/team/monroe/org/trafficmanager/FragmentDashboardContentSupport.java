@@ -50,12 +50,14 @@ public abstract class FragmentDashboardContentSupport extends FragmentDashboardS
             case IssuesCodes.HTTP_BAD_URL:
             case IssuesCodes.HTTP_NOT_AUTHORIZED:
             case IssuesCodes.NO_CONFIGURATION: return "Change router settings";
+            case IssuesCodes.NO_CONFIGURATION_PROFILES: return "Create Profile";
         }
         return null;
     }
 
     protected int customizeIssueImageResource(int issueCode) {
         switch (issueCode){
+            case IssuesCodes.NO_CONFIGURATION_PROFILES:
             case IssuesCodes.NO_CONFIGURATION: return R.drawable.android_build_big;
         }
         if (IssuesCodes.isHttpIssue(issueCode)) return R.drawable.android_http_big;
@@ -66,6 +68,9 @@ public abstract class FragmentDashboardContentSupport extends FragmentDashboardS
         switch (issueCode){
             case IssuesCodes.NO_CONFIGURATION:
                 initiateRouterConfiguration();
+                return true;
+            case IssuesCodes.NO_CONFIGURATION_PROFILES:
+                dashboard().dialog_editBandwidthProfile(null);
                 return true;
             case IssuesCodes.HTTP_NOT_AUTHORIZED:
                 initiateRouterConfiguration();

@@ -19,6 +19,7 @@ import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
 import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.entities.IpReservation;
+import team.monroe.org.trafficmanager.exceptions.NoBandwidthProfileIssue;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileAddNew;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
@@ -71,17 +72,6 @@ public class App extends ApplicationSupport<AppModel> {
             }
         };
 
-        data_ipReservation.addDataChangeObserver(new Data.DataChangeObserver<List<IpReservation>>() {
-            @Override
-            public void onDataInvalid() {
-                data_devicesInfo.invalidate();
-            }
-
-            @Override
-            public void onData(List<IpReservation> ipReservations) {
-            }
-        });
-
         data_devicesInfo = new Data<List<DeviceInfo>>(model()) {
             @Override
             protected List<DeviceInfo> provideData() {
@@ -104,10 +94,15 @@ public class App extends ApplicationSupport<AppModel> {
             @Override
             protected List<BandwidthLimit> provideData() {
                 try {
-                    List<BandwidthLimitRule> bandwidthLimitRules = data_bandwidthLimitRules.fetch();
+
                     List<BandwidthProfile> bandwidthProfiles = data_bandwidthProfiles.fetch();
-                    List<DeviceInfo> deviceInfos = data_devicesInfo.fetch();
+                    if (bandwidthProfiles.isEmpty()){
+                        throw new NoBandwidthProfileIssue();
+                    }
+
                     Set<String> matchedRuleSet = new HashSet<>();
+                    List<BandwidthLimitRule> bandwidthLimitRules = data_bandwidthLimitRules.fetch();
+                    List<DeviceInfo> deviceInfos = data_devicesInfo.fetch();
                     List<BandwidthLimit> answer = new ArrayList<>(deviceInfos.size());
 
                     for (BandwidthLimit.Target target : deviceInfos) {
@@ -152,6 +147,9 @@ public class App extends ApplicationSupport<AppModel> {
                 return null;
             }
         };
+        data_devicesInfo.dependsOn(data_ipReservation);
+        data_bandwidthLimits.dependsOn(data_bandwidthProfiles, data_bandwidthLimitRules, data_devicesInfo);
+
     }
 
     public boolean function_hasRouterConfiguration() {
