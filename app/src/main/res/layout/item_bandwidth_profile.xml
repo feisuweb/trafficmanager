@@ -3,7 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="5dp"
     android:gravity="center_vertical">
 
 
@@ -13,12 +14,15 @@
         android:layout_height="30dp"
         android:layout_margin="10dp"
         android:src="@drawable/android_edit"
+        android:layout_gravity="top"
         style="@style/Button.Round.Action"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginRight="10dp">
 
         <TextView
             android:id="@+id/text_caption"
@@ -37,24 +41,13 @@
 
     </LinearLayout>
 
-    <Space
-        android:layout_weight="1"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp" />
-
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginRight="5dp"
-        android:src="@drawable/android_swap_hor"/>
-
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="2"
         android:rowCount="2">
         <TextView
-            android:text="In limit"
+            android:text="In"
             style="@style/Text.Description"/>
         <TextView
             android:id="@+id/text_in_limit"
@@ -62,7 +55,7 @@
             android:text="30 kbps"
             style="@style/Text"/>
         <TextView
-            android:text="Out limit"
+            android:text="Out"
             style="@style/Text.Description"/>
         <TextView
             android:id="@+id/text_out_limit"
