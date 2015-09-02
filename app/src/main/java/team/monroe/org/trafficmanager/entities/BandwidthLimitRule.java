@@ -40,4 +40,8 @@ public class BandwidthLimitRule implements Serializable {
                (minOutLimit == maxOutLimit && maxOutLimit == bandwidthProfile.outLimit)&&
                ((startPort == 1 && endPort == 65535) /*||(startPort == 0 && endPort == 0)*/);
     }
+
+    public BandwidthProfile asProfile(String caption, String description) {
+        return new BandwidthProfile(caption,description,maxOutLimit,maxInLimit);
+    }
 }

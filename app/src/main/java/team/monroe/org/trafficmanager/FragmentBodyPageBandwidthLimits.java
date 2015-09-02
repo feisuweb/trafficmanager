@@ -78,15 +78,28 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                                 return new GetViewImplementation.GenericViewHolder<BandwidthProfile>() {
 
                                     TextView caption = (TextView) convertView.findViewById(R.id.text_caption);
+                                    TextView description = (TextView) convertView.findViewById(R.id.text_description);
+                                    TextView inLimit = (TextView) convertView.findViewById(R.id.text_in_limit);
+                                    TextView outLimit = (TextView) convertView.findViewById(R.id.text_out_limit);
 
                                     @Override
                                     public void update(BandwidthProfile profile, int position) {
                                         caption.setText(profile.title);
+                                        description.setText(profile.description);
+                                        inLimit.setText(Integer.toString(profile.inLimit)+" kbps");
+                                        outLimit.setText(Integer.toString(profile.outLimit)+" kbps");
                                     }
+
                                 };
                             }
-                        }, R.layout.item_default);
-
+                        }, R.layout.item_bandwith_profile_vert);
+                int selectionIndex = 0;
+                if (limit.profile != null){
+                    selectionIndex = mBandwidthLimits.indexOf(limit.profile);
+                    if (selectionIndex == -1){
+                        profileSpinnerAdapter.add(limit.profile);
+                    }
+                }
                 profileSpinnerAdapter.addAll(mBandwidthProfiles);
                 profileSpinner.setAdapter(profileSpinnerAdapter);
             }

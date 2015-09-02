@@ -109,6 +109,9 @@ public class App extends ApplicationSupport<AppModel> {
                          if (target.getAlias() != null){
                              BandwidthLimitRule rule = findRule(target, bandwidthLimitRules);
                              BandwidthProfile profile = findProfile(rule, bandwidthProfiles);
+                             if (profile == null && rule != null){
+                                 profile = rule.asProfile("Unknown Profile", "This profile created outside application");
+                             }
                              answer.add(new BandwidthLimit(target, profile, rule));
                              if (rule != null) {
                                  matchedRuleSet.add(rule.id);
