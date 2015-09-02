@@ -8,10 +8,11 @@ import org.monroe.team.corebox.log.L;
 import org.monroe.team.corebox.utils.P;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import team.monroe.org.trafficmanager.entities.BandwidthLimit;
 import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
 import team.monroe.org.trafficmanager.entities.BandwidthProfile;
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
@@ -38,6 +39,7 @@ public class App extends ApplicationSupport<AppModel> {
     public Data<List<DeviceInfo>> data_devicesInfo;
     public Data<List<IpReservation>> data_ipReservation;
     public Data<List<BandwidthProfile>> data_bandwidthProfiles;
+    public Data<List<BandwidthLimit>> data_bandwidthLimits;
 
     @Override
     protected AppModel createModel() {
@@ -62,7 +64,6 @@ public class App extends ApplicationSupport<AppModel> {
         };
 
 
-
         data_ipReservation = new Data<List<IpReservation>>(model()) {
             @Override
             protected List<IpReservation> provideData() {
@@ -75,8 +76,10 @@ public class App extends ApplicationSupport<AppModel> {
             public void onDataInvalid() {
                 data_devicesInfo.invalidate();
             }
+
             @Override
-            public void onData(List<IpReservation> ipReservations) {}
+            public void onData(List<IpReservation> ipReservations) {
+            }
         });
 
         data_devicesInfo = new Data<List<DeviceInfo>>(model()) {
@@ -94,6 +97,59 @@ public class App extends ApplicationSupport<AppModel> {
                     Throwable throwable = ExceptionsUtils.resolveDataFetchException(e);
                     throw ExceptionsUtils.asRuntime(throwable);
                 }
+            }
+        };
+
+        data_bandwidthLimits = new Data<List<BandwidthLimit>>(model()) {
+            @Override
+            protected List<BandwidthLimit> provideData() {
+                try {
+                    List<BandwidthLimitRule> bandwidthLimitRules = data_bandwidthLimitRules.fetch();
+                    List<BandwidthProfile> bandwidthProfiles = data_bandwidthProfiles.fetch();
+                    List<DeviceInfo> deviceInfos = data_devicesInfo.fetch();
+                    Set<String> matchedRuleSet = new HashSet<>();
+                    List<BandwidthLimit> answer = new ArrayList<>(deviceInfos.size());
+
+                    for (BandwidthLimit.Target target : deviceInfos) {
+                         if (target.getAlias() != null){
+                             BandwidthLimitRule rule = findRule(target, bandwidthLimitRules);
+                             BandwidthProfile profile = findProfile(rule, bandwidthProfiles);
+                             answer.add(new BandwidthLimit(target, profile, rule));
+                             if (rule != null) {
+                                 matchedRuleSet.add(rule.id);
+                             }
+                         }
+                    }
+
+                    for (BandwidthLimitRule bandwidthLimitRule : bandwidthLimitRules) {
+                         if (!matchedRuleSet.contains(bandwidthLimitRule.id)){
+                             answer.add(new BandwidthLimit(null,null,bandwidthLimitRule));
+                         }
+                    }
+
+                    return answer;
+
+                } catch (FetchException e) {
+                    Throwable throwable = ExceptionsUtils.resolveDataFetchException(e);
+                    throw ExceptionsUtils.asRuntime(throwable);
+                }
+            }
+
+            private BandwidthProfile findProfile(BandwidthLimitRule rule, List<BandwidthProfile> bandwidthProfiles) {
+                if (rule == null) return null;
+                for (BandwidthProfile bandwidthProfile : bandwidthProfiles) {
+                    if (rule.matchProfile(bandwidthProfile)){
+                        return bandwidthProfile;
+                    }
+                }
+                return null;
+            }
+
+            private BandwidthLimitRule findRule(BandwidthLimit.Target target, List<BandwidthLimitRule> bandwidthLimitRules) {
+                for (BandwidthLimitRule bandwidthLimitRule : bandwidthLimitRules) {
+                    if (bandwidthLimitRule.isForTarget(target))return bandwidthLimitRule;
+                }
+                return null;
             }
         };
     }

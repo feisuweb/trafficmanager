@@ -29,4 +29,15 @@ public class BandwidthLimitRule implements Serializable {
         this.minOutLimit = minOutLimit;
         this.protocol = protocol;
     }
+
+    public boolean isForTarget(BandwidthLimit.Target target) {
+         String[] targetIps = target.getIpSet();
+         return targetIps[0].equals(startIp) && targetIps[1].equals(endIp);
+    }
+
+    public boolean matchProfile(BandwidthProfile bandwidthProfile) {
+        return (minInLimit == maxInLimit && maxInLimit == bandwidthProfile.inLimit) &&
+               (minOutLimit == maxOutLimit && maxOutLimit == bandwidthProfile.outLimit)&&
+               ((startPort == 1 && endPort == 65535) ||(startPort == 0 && endPort == 0));
+    }
 }
