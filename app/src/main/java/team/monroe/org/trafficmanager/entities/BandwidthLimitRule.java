@@ -38,6 +38,6 @@ public class BandwidthLimitRule implements Serializable {
     public boolean matchProfile(BandwidthProfile bandwidthProfile) {
         return (minInLimit == maxInLimit && maxInLimit == bandwidthProfile.inLimit) &&
                (minOutLimit == maxOutLimit && maxOutLimit == bandwidthProfile.outLimit)&&
-               ((startPort == 1 && endPort == 65535) ||(startPort == 0 && endPort == 0));
+               ((startPort == 1 && endPort == 65535) /*||(startPort == 0 && endPort == 0)*/);
     }
 }

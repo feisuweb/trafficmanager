@@ -39,6 +39,14 @@
                 android:text="ip"
                 style="@style/Text.Description"/>
         </LinearLayout>
+        <CheckBox
+            android:layout_marginLeft="10dp"
+            android:id="@+id/check_enabled"
+            android:layout_width="50dp"
+            android:layout_height="25dp"
+            android:button="@android:color/transparent"
+            android:background="@drawable/activation_check"
+            />
     </LinearLayout>
     <Spinner
         android:id="@+id/spinner"

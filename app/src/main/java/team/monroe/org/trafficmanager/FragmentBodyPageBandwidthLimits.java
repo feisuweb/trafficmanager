@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,8 +61,11 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                 ((TextView)view.findViewById(R.id.text_caption)).setText(bandwidthLimit.target.getAlias().alias);
                 ((TextView)view.findViewById(R.id.text_ip)).setText(ipSetAsString(bandwidthLimit.target.getIpSet()));
                 ((ImageView)view.findViewById(R.id.image)).setImageResource(DeviceType.by(bandwidthLimit.target.getAlias().icon).drawableId);
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_enabled);
+                checkBox.setChecked(bandwidthLimit.source != null && bandwidthLimit.source.enabled);
                 Spinner profileSpinner = (Spinner) view.findViewById(R.id.spinner);
                 initializeSpinner(profileSpinner, bandwidthLimit);
+                profileSpinner.setEnabled(checkBox.isChecked());
                 return view;
             }
 
