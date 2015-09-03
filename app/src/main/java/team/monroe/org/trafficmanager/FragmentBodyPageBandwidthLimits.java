@@ -15,6 +15,7 @@ import org.monroe.team.android.box.app.ApplicationSupport;
 import org.monroe.team.android.box.app.ui.GenericListViewAdapter;
 import org.monroe.team.android.box.app.ui.GetViewImplementation;
 import org.monroe.team.android.box.data.Data;
+import org.monroe.team.android.box.data.RefreshableCachedData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +35,7 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
     private Data.DataChangeObserver<List<BandwidthProfile>> observer_bandwidthProfiles;
     private List<BandwidthLimit> mBandwidthLimits;
     private List<BandwidthProfile> mBandwidthProfiles;
+    private ApplicationSupport.PeriodicalAction mRefreshAction;
 
     @Override
     protected int getPanelLayoutId() {
@@ -144,19 +146,20 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
         return (ipSet[0].equals(ipSet[1]))?ipSet[0]:ipSet[0]+" - "+ipSet[1];
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
         observer_bandwidthLimits = new Data.DataChangeObserver<List<BandwidthLimit>>() {
             @Override
             public void onDataInvalid() {
-                runLastOnUiThread(new Runnable() {
+                /*runLastOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mBandwidthLimits = null;
                         fetch_bandwidthLimits();
                     }
-                });
+                });*/
             }
 
             @Override
@@ -164,8 +167,14 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
 
             }
         };
+        mRefreshAction = application().preparePeriodicalAction(new Runnable() {
+            @Override
+            public void run() {
+                fetch_bandwidthLimits();
+            }
+        });
+
         application().data_bandwidthLimits.addDataChangeObserver(observer_bandwidthLimits);
-        fetch_bandwidthLimits();
         observer_bandwidthProfiles = new Data.DataChangeObserver<List<BandwidthProfile>>() {
             @Override
             public void onDataInvalid() {
@@ -180,6 +189,13 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
         };
         application().data_bandwidthProfiles.addDataChangeObserver(observer_bandwidthProfiles);
         fetch_profiles();
+        mRefreshAction.start(0, 2000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mRefreshAction.stop();
     }
 
     private void fetch_profiles() {
@@ -199,7 +215,6 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
     }
 
     private void fetch_bandwidthLimits() {
-        showLoading();
         application().data_bandwidthLimits.fetch(true, new Data.FetchObserver<List<BandwidthLimit>>() {
             @Override
             public void onFetch(final List<BandwidthLimit> bandwidthLimits) {
@@ -220,7 +235,9 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                         return new Integer(lhs.target.getAlias().icon).compareTo(rhs.target.getAlias().icon);
                     }
                 });
-
+                if (limits.equals(mBandwidthLimits)){
+                    return;
+                }
                 mBandwidthLimits = limits;
                 updateUi_unusedRules(unusedLimits);
                 updateUi_limits();
