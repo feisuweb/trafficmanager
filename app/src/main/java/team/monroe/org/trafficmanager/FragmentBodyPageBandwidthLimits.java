@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.monroe.team.android.box.app.ApplicationSupport;
 import org.monroe.team.android.box.app.ui.GenericListViewAdapter;
 import org.monroe.team.android.box.app.ui.GetViewImplementation;
 import org.monroe.team.android.box.data.Data;
@@ -56,16 +58,36 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
     private ListPanelPresenter.DataViewResolver<BandwidthLimit> viewResolver_limit() {
         return new ListPanelPresenter.DataViewResolver<BandwidthLimit>() {
             @Override
-            public View build(BandwidthLimit bandwidthLimit, ViewGroup parent, LayoutInflater inflater) {
+            public View build(final BandwidthLimit bandwidthLimit, ViewGroup parent, LayoutInflater inflater) {
                 View view = inflater.inflate(R.layout.item_limit, parent, false);
                 ((TextView)view.findViewById(R.id.text_caption)).setText(bandwidthLimit.target.getAlias().alias);
                 ((TextView)view.findViewById(R.id.text_ip)).setText(ipSetAsString(bandwidthLimit.target.getIpSet()));
                 ((ImageView)view.findViewById(R.id.image)).setImageResource(DeviceType.by(bandwidthLimit.target.getAlias().icon).drawableId);
                 CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_enabled);
                 checkBox.setChecked(bandwidthLimit.source != null && bandwidthLimit.source.enabled);
-                Spinner profileSpinner = (Spinner) view.findViewById(R.id.spinner);
+                final Spinner profileSpinner = (Spinner) view.findViewById(R.id.spinner);
                 initializeSpinner(profileSpinner, bandwidthLimit);
                 profileSpinner.setEnabled(checkBox.isChecked());
+                profileSpinner.setAlpha(checkBox.isChecked()?1f:0.5f);
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            BandwidthProfile bandwidthProfile = (BandwidthProfile) profileSpinner.getSelectedItem();
+                            application().function_limitActivate(bandwidthLimit.target, bandwidthProfile, new ApplicationSupport.ValueObserver<Boolean>() {
+                                @Override
+                                public void onSuccess(Boolean value) {
+
+                                }
+
+                                @Override
+                                public void onFail(Throwable exception) {
+                                    handleException(exception);
+                                }
+                            });
+                        }
+                    }
+                });
                 return view;
             }
 

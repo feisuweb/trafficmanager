@@ -4,6 +4,7 @@ final public class IssuesCodes {
 
     public static final int NO_CONFIGURATION = 0;
     public static final int NO_CONFIGURATION_PROFILES = 1;
+    public static final int INVALID_STATE = 2;
 
     public static final int HTTP_BAD_URL = 100;
     public static final int HTTP_NOT_AUTHORIZED = 101;
