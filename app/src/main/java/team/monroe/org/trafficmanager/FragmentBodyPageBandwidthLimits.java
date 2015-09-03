@@ -36,6 +36,7 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
     private List<BandwidthLimit> mBandwidthLimits;
     private List<BandwidthProfile> mBandwidthProfiles;
     private ApplicationSupport.PeriodicalAction mRefreshAction;
+    private ListPanelPresenter<BandwidthLimitRule> mUnsupportedLimitListPresenter;
 
     @Override
     protected int getPanelLayoutId() {
@@ -56,7 +57,34 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                 view(R.id.panel_limits, ViewGroup.class),
                 viewResolver_limit(),
                 viewResolver_defaultNoItems());
+        mUnsupportedLimitListPresenter = new ListPanelPresenter<BandwidthLimitRule>(
+                activity().getLayoutInflater(),
+                view(R.id.panel_unsupported_limits, ViewGroup.class),
+                viewResolver_unsupportedLimitRules(),
+                viewResolver_defaultNoItems());
     }
+
+    private ListPanelPresenter.DataViewResolver<BandwidthLimitRule> viewResolver_unsupportedLimitRules() {
+        return new ListPanelPresenter.DataViewResolver<BandwidthLimitRule>() {
+            @Override
+            public View build(final BandwidthLimitRule bandwidthLimitRule, ViewGroup parent, LayoutInflater inflater) {
+                View view = inflater.inflate(R.layout.item_limit_rule_unsupported, parent, false);
+                String caption = bandwidthLimitRule.startIp+" - " +bandwidthLimitRule.endIp+" : "+bandwidthLimitRule.startPort+" - "+bandwidthLimitRule.endPort;
+                ((TextView)view.findViewById(R.id.text_caption)).setText(caption);
+                String description = "Protocol: "+bandwidthLimitRule.protocol+" In limit: "+bandwidthLimitRule.minInLimit+" ( max "+bandwidthLimitRule.maxInLimit+" ) kbps";
+                description += " Out limit: "+bandwidthLimitRule.minOutLimit+" ( max "+bandwidthLimitRule.maxOutLimit+" ) kbps";
+                ((TextView)view.findViewById(R.id.text_description)).setText(description);
+                view.findViewById(R.id.action_delete).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dashboard().dialog_execute(application().function_pending_limitDelete(bandwidthLimitRule.id));
+                    }
+                });
+                return view;
+            }
+        };
+    }
+
 
     private ListPanelPresenter.DataViewResolver<BandwidthLimit> viewResolver_limit() {
         return new ListPanelPresenter.DataViewResolver<BandwidthLimit>() {
@@ -235,11 +263,11 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                         return new Integer(lhs.target.getAlias().icon).compareTo(rhs.target.getAlias().icon);
                     }
                 });
+                updateUi_unusedRules(unusedLimits);
                 if (limits.equals(mBandwidthLimits)){
                     return;
                 }
                 mBandwidthLimits = limits;
-                updateUi_unusedRules(unusedLimits);
                 updateUi_limits();
             }
 
@@ -251,7 +279,11 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
     }
 
     private void updateUi_unusedRules(List<BandwidthLimitRule> bandwidthLimits) {
-
+        view(R.id.panel_unsupported_limits_content).setVisibility(bandwidthLimits.isEmpty()? View.GONE:View.VISIBLE);
+        if (bandwidthLimits.isEmpty()){
+            return;
+        }
+        mUnsupportedLimitListPresenter.updateUI(bandwidthLimits);
     }
 
     private void updateUi_limits() {

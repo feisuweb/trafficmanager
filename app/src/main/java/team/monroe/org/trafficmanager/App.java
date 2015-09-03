@@ -23,6 +23,7 @@ import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.exceptions.NoBandwidthProfileIssue;
 import team.monroe.org.trafficmanager.uc.BandwidthLimitActivate;
 import team.monroe.org.trafficmanager.uc.BandwidthLimitDeactivate;
+import team.monroe.org.trafficmanager.uc.BandwidthLimitDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileAddNew;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
@@ -228,6 +229,20 @@ public class App extends ApplicationSupport<AppModel> {
                 try {
                 return model().execute(BandwidthLimitDeactivate.class,
                         target);
+                }finally {
+                    data_bandwidthLimitRules.invalidate();
+                }
+            }
+        };
+    }
+
+    public Closure<Void, Boolean> function_pending_limitDelete(final String limitRuleId) {
+        return new Closure<Void, Boolean>() {
+            @Override
+            public Boolean execute(Void arg) {
+                try {
+                    return model().execute(BandwidthLimitDelete.class,
+                            limitRuleId);
                 }finally {
                     data_bandwidthLimitRules.invalidate();
                 }

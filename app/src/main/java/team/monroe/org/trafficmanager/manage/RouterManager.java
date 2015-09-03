@@ -253,6 +253,16 @@ public class RouterManager {
         checkIfResultIsSuccess(configuration, pageText);
     }
 
+    public void deleteBandwidthLimitRule(ConnectionConfiguration configuration, String id) {
+        String pageText = doGetRequest(
+                configuration.buildUrl("userRpm/QoSRuleListRpm.htm",
+                        new P<String, Object>("Del", id),
+                        new P<String, Object>("Page", 1)
+                ),
+                configuration.user, configuration.password);
+        checkIfResultIsSuccess(configuration, pageText);
+    }
+
     public static class DhcpReservedIpDetail{
 
         public final String mac;

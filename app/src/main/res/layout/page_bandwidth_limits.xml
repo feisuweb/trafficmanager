@@ -26,4 +26,38 @@
         android:orientation="vertical">
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/panel_unsupported_limits_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        style="@style/Panel.Back"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unsupported limits rules"
+        style="@style/Text.Caption"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="There are some rules which is currently not supported by application (e.g. with partial ports limits). This rules may not allow you to apply bandwidth limit profiles to your devices."
+        style="@style/Text.Description"/>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:id="@+id/panel_unsupported_limits"
+            android:layout_marginBottom="20dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
