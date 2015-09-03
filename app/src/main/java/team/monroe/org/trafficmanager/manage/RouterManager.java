@@ -1,6 +1,9 @@
 package team.monroe.org.trafficmanager.manage;
 
+import android.content.res.Configuration;
+
 import org.monroe.team.android.box.services.HttpManager;
+import org.monroe.team.corebox.log.L;
 import org.monroe.team.corebox.utils.Closure;
 import org.monroe.team.corebox.utils.P;
 
@@ -16,7 +19,9 @@ import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
 import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
 import team.monroe.org.trafficmanager.entities.ProtocolClass;
 import team.monroe.org.trafficmanager.exceptions.HttpIssue;
+import team.monroe.org.trafficmanager.exceptions.InvalidStateIssue;
 import team.monroe.org.trafficmanager.exceptions.IssuesCodes;
+import team.monroe.org.trafficmanager.exceptions.RouterExecutionIssue;
 
 public class RouterManager {
 
@@ -25,6 +30,11 @@ public class RouterManager {
             Pattern.MULTILINE|Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
     private static final Pattern pattern_topLevelBandwidthLimitRules = Pattern.compile(".*var *QoSRuleListArray *= *new *Array *\\(([^)]*).*",
             Pattern.MULTILINE|Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
+    //var errCode = "27009";
+    private static final Pattern pattern_topLevelError = Pattern.compile(".*var *errCode *= *\"([^\"]*).*",
+            Pattern.MULTILINE|Pattern.CASE_INSENSITIVE|Pattern.DOTALL);
+
+    private String mLocalizationErrorCodesPageContent = null;
 
     public RouterManager(HttpManager httpManager) {
         this.httpManager = httpManager;
@@ -184,7 +194,48 @@ public class RouterManager {
                         new P<String, Object>("Page", 1)
                 ),
                 configuration.user, configuration.password);
-        System.out.println(pageText);
+        checkIfResultIsSuccess(configuration, pageText);
+    }
+
+    private void checkIfResultIsSuccess(ConnectionConfiguration configuration, String pageText) {
+        Matcher matcher = pattern_topLevelError.matcher(pageText);
+        if (matcher.matches()){
+            String errorCode  = matcher.group(1);
+            String humanDescription = convertToHumanDescription(configuration, errorCode);
+            throw new RouterExecutionIssue(humanDescription);
+        }
+    }
+
+    private synchronized String convertToHumanDescription(ConnectionConfiguration configuration, String errorCode) {
+
+        String fallbackErrorDescription = "Error code = "+errorCode;
+        if (mLocalizationErrorCodesPageContent == null){
+            try {
+            mLocalizationErrorCodesPageContent = doGetRequest(
+                    configuration.buildUrl("localiztion/str_err.js"),
+                    configuration.user, configuration.password);
+            }catch (Throwable e){
+                L.DEBUG.w("Couldn`t fetch error codes description", e);
+                mLocalizationErrorCodesPageContent = "";
+            }
+        }
+
+        if (!mLocalizationErrorCodesPageContent.isEmpty()){
+            Matcher matcher = Pattern.compile(".*var *([^ ]*) *= *"+errorCode+".*", Pattern.DOTALL|Pattern.MULTILINE)
+                    .matcher(mLocalizationErrorCodesPageContent);
+            if (matcher.matches()){
+                String errorCodeShort = matcher.group(1).trim();
+
+                matcher = Pattern.compile(".*str_err."+errorCodeShort+".[ \\t]*=[ \\t]*\"([^\"]*).*", Pattern.DOTALL|Pattern.MULTILINE)
+                        .matcher(mLocalizationErrorCodesPageContent);
+                if (matcher.matches()){
+                    return matcher.group(1);
+                }else {
+                    return "Error short = "+errorCodeShort;
+                }
+            }
+        }
+        return fallbackErrorDescription;
     }
 
     public void disableBandwidthLimitRule(ConnectionConfiguration configuration, String id) {
@@ -195,6 +246,7 @@ public class RouterManager {
                         new P<String, Object>("Page", 1)
                 ),
                 configuration.user, configuration.password);
+        checkIfResultIsSuccess(configuration, pageText);
     }
 
     public static class DhcpReservedIpDetail{

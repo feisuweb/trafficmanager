@@ -35,8 +35,15 @@ public class BandwidthLimitActivate extends UserCaseSupport<BandwidthLimitActiva
             }
         }
         if (eRule == null){
-            //TODO: create new rule
-            throw new InvalidStateIssue("Limit creation not implemented yet");
+            using(RouterManager.class).updateBandwidthLimitRule(
+                    configuration,
+                    "0",
+                    request.target.getIpSet()[0],
+                    request.target.getIpSet()[1],
+                    1,
+                    BandwidthLimitRule.PORT_MAX_VALUE,
+                    request.profile.inLimit,
+                    request.profile.outLimit);
         }else {
             using(RouterManager.class).updateBandwidthLimitRule(
                     configuration,

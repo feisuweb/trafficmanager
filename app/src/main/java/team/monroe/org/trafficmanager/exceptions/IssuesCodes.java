@@ -13,6 +13,7 @@ final public class IssuesCodes {
     public static final int HTTP_GENERAL = 104;
 
     public static final int INVALID_ENTITY = 201;
+    public static final int ROUTER_EXECUTION_ISSUE = 202;
 
     public static boolean isHttpIssue(int issueCode){
         return issueCode >= 100 && issueCode < 201;
