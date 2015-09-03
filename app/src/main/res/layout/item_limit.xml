@@ -38,6 +38,11 @@
                 android:layout_height="wrap_content"
                 android:text="ip"
                 style="@style/Text.Description"/>
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                />
         </LinearLayout>
         <CheckBox
             android:layout_marginLeft="10dp"
@@ -48,10 +53,4 @@
             android:background="@drawable/activation_check"
             />
     </LinearLayout>
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginLeft="60dp"
-        />
 </LinearLayout>
