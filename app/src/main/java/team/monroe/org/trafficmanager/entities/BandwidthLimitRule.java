@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class BandwidthLimitRule implements Serializable {
 
+    public static final int PORT_MAX_VALUE = 65535;
+
     public final String id;
     public final String startIp;
     public final String endIp;
@@ -31,17 +33,21 @@ public class BandwidthLimitRule implements Serializable {
     }
 
     public boolean isForTarget(BandwidthLimit.Target target) {
+         if (!isValid()) return false;
          String[] targetIps = target.getIpSet();
          return targetIps[0].equals(startIp) && targetIps[1].equals(endIp);
     }
 
     public boolean matchProfile(BandwidthProfile bandwidthProfile) {
         return (minInLimit == maxInLimit && maxInLimit == bandwidthProfile.inLimit) &&
-               (minOutLimit == maxOutLimit && maxOutLimit == bandwidthProfile.outLimit)&&
-               ((startPort == 1 && endPort == 65535) /*||(startPort == 0 && endPort == 0)*/);
+               (minOutLimit == maxOutLimit && maxOutLimit == bandwidthProfile.outLimit);
     }
 
     public BandwidthProfile asProfile(String caption, String description) {
         return new BandwidthProfile(caption,description,maxOutLimit,maxInLimit);
+    }
+
+    public boolean isValid() {
+        return  startPort == 1 && endPort == PORT_MAX_VALUE && protocol == ProtocolClass.ALL;
     }
 }

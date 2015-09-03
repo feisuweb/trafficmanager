@@ -167,6 +167,25 @@ public class RouterManager {
         }
     }
 
+    public void updateBandwidthLimitRule(ConnectionConfiguration configuration, String id, String startIp, String endIp, int startPort, int endPort, int inLimit, int outLimit) {
+        String pageText = doGetRequest(
+                configuration.buildUrl("userRpm/QoSRuleListRpm.htm",
+                        new P<String, Object>("start_ip_addr", startIp),
+                        new P<String, Object>("end_ip_addr", endIp),
+                        new P<String, Object>("start_port", startPort),
+                        new P<String, Object>("end_port", endPort),
+                        new P<String, Object>("protocol", 0),
+                        new P<String, Object>("min_up_band_width", inLimit),
+                        new P<String, Object>("max_up_band_width", inLimit),
+                        new P<String, Object>("min_down_band_width", outLimit),
+                        new P<String, Object>("max_down_band_width", outLimit),
+                        new P<String, Object>("curEditId", id),
+                        new P<String, Object>("enable", "true"),
+                        new P<String, Object>("Page", 1)
+                ),
+                configuration.user, configuration.password);
+        System.out.println(pageText);
+    }
 
     public static class DhcpReservedIpDetail{
 

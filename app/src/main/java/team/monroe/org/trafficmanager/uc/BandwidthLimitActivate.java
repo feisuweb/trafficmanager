@@ -9,8 +9,10 @@ import java.util.List;
 import team.monroe.org.trafficmanager.entities.BandwidthLimit;
 import team.monroe.org.trafficmanager.entities.BandwidthLimitRule;
 import team.monroe.org.trafficmanager.entities.BandwidthProfile;
+import team.monroe.org.trafficmanager.entities.ConnectionConfiguration;
 import team.monroe.org.trafficmanager.exceptions.InvalidStateIssue;
-import team.monroe.org.trafficmanager.exceptions.Issue;
+import team.monroe.org.trafficmanager.manage.ObjectManager;
+import team.monroe.org.trafficmanager.manage.RouterManager;
 
 
 public class BandwidthLimitActivate extends UserCaseSupport<BandwidthLimitActivate.ActivationRequest, Boolean> {
@@ -22,6 +24,9 @@ public class BandwidthLimitActivate extends UserCaseSupport<BandwidthLimitActiva
     @Override
     protected Boolean executeImpl(ActivationRequest request) {
         List<BandwidthLimitRule> existingRules = using(Model.class).execute(BandwidthRulesGetAll.class, null);
+
+        ConnectionConfiguration configuration = using(ObjectManager.class).getConnectionConfiguration();
+
         BandwidthLimitRule eRule = null;
         for (BandwidthLimitRule existingRule : existingRules) {
             if (existingRule.isForTarget(request.target)) {
@@ -33,9 +38,17 @@ public class BandwidthLimitActivate extends UserCaseSupport<BandwidthLimitActiva
             //TODO: create new rule
             throw new InvalidStateIssue("Limit creation not implemented yet");
         }else {
-            //TODO: edit existing rule
-            throw new InvalidStateIssue("Limit edit not implemented yet");
+            using(RouterManager.class).updateBandwidthLimitRule(
+                    configuration,
+                    eRule.id,
+                    request.target.getIpSet()[0],
+                    request.target.getIpSet()[1],
+                    1,
+                    BandwidthLimitRule.PORT_MAX_VALUE,
+                    request.profile.inLimit,
+                    request.profile.outLimit);
         }
+        return true;
     }
 
     public static class ActivationRequest{

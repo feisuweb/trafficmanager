@@ -146,7 +146,7 @@ public class App extends ApplicationSupport<AppModel> {
 
             private BandwidthLimitRule findRule(BandwidthLimit.Target target, List<BandwidthLimitRule> bandwidthLimitRules) {
                 for (BandwidthLimitRule bandwidthLimitRule : bandwidthLimitRules) {
-                    if (bandwidthLimitRule.isForTarget(target))return bandwidthLimitRule;
+                    if (bandwidthLimitRule.isValid() && bandwidthLimitRule.isForTarget(target))return bandwidthLimitRule;
                 }
                 return null;
             }

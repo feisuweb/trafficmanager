@@ -63,7 +63,7 @@ public class FragmentDialogBandwidthProfileEdit extends FragmentDashboardDialog 
 
         visibility_actionClose(false);
         showLoading();
-        BandwidthProfile bandwidthProfile = new BandwidthProfile(title, description, Integer.parseInt(inLimit), Integer.parseInt(outLimit));
+        BandwidthProfile bandwidthProfile = new BandwidthProfile(title, description, Integer.parseInt(outLimit), Integer.parseInt(inLimit));
         if (mProfile == null) {
             application().function_addBandwidthProfile(bandwidthProfile,
                     new ApplicationSupport.ValueObserver<BandwidthProfile>() {
