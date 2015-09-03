@@ -85,7 +85,20 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                                     handleException(exception);
                                 }
                             });
+                        }else {
+                            application().function_limitDeactivate(bandwidthLimit.target, new ApplicationSupport.ValueObserver<Boolean>() {
+                                @Override
+                                public void onSuccess(Boolean value) {
+
+                                }
+
+                                @Override
+                                public void onFail(Throwable exception) {
+                                    handleException(exception);
+                                }
+                            });
                         }
+
                     }
                 });
                 return view;

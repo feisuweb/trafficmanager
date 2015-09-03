@@ -187,6 +187,16 @@ public class RouterManager {
         System.out.println(pageText);
     }
 
+    public void disableBandwidthLimitRule(ConnectionConfiguration configuration, String id) {
+        String pageText = doGetRequest(
+                configuration.buildUrl("userRpm/QoSRuleListRpm.htm",
+                        new P<String, Object>("enableId", id),
+                        new P<String, Object>("enable", "false"),
+                        new P<String, Object>("Page", 1)
+                ),
+                configuration.user, configuration.password);
+    }
+
     public static class DhcpReservedIpDetail{
 
         public final String mac;

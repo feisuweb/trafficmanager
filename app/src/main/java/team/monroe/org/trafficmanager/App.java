@@ -21,6 +21,7 @@ import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.exceptions.NoBandwidthProfileIssue;
 import team.monroe.org.trafficmanager.uc.BandwidthLimitActivate;
+import team.monroe.org.trafficmanager.uc.BandwidthLimitDeactivate;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileAddNew;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
@@ -207,6 +208,18 @@ public class App extends ApplicationSupport<AppModel> {
     public void function_limitActivate(BandwidthLimit.Target target, BandwidthProfile bandwidthProfile, ValueObserver<Boolean> observer) {
         fetchValue(BandwidthLimitActivate.class,
                 new BandwidthLimitActivate.ActivationRequest(target, bandwidthProfile),
+                new NoOpValueAdapter<Boolean>(){
+                    @Override
+                    public Boolean adapt(Boolean value) {
+                        data_bandwidthLimitRules.invalidate();
+                        return super.adapt(value);
+                    }
+                },observer);
+    }
+
+    public void function_limitDeactivate(BandwidthLimit.Target target, ValueObserver<Boolean> observer) {
+        fetchValue(BandwidthLimitDeactivate.class,
+                target,
                 new NoOpValueAdapter<Boolean>(){
                     @Override
                     public Boolean adapt(Boolean value) {
