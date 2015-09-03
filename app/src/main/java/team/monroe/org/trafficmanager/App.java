@@ -5,6 +5,7 @@ import org.monroe.team.android.box.data.Data;
 import org.monroe.team.android.box.utils.AndroidLogImplementation;
 import org.monroe.team.android.box.utils.ExceptionsUtils;
 import org.monroe.team.corebox.log.L;
+import org.monroe.team.corebox.utils.Closure;
 import org.monroe.team.corebox.utils.P;
 
 import java.util.ArrayList;
@@ -43,6 +44,7 @@ public class App extends ApplicationSupport<AppModel> {
     public Data<List<IpReservation>> data_ipReservation;
     public Data<List<BandwidthProfile>> data_bandwidthProfiles;
     public Data<List<BandwidthLimit>> data_bandwidthLimits;
+    private Data<Boolean> mPendingExecution;
 
     @Override
     protected AppModel createModel() {
@@ -205,27 +207,44 @@ public class App extends ApplicationSupport<AppModel> {
         }, observer);
     }
 
-    public void function_limitActivate(BandwidthLimit.Target target, BandwidthProfile bandwidthProfile, ValueObserver<Boolean> observer) {
-        fetchValue(BandwidthLimitActivate.class,
-                new BandwidthLimitActivate.ActivationRequest(target, bandwidthProfile),
-                new NoOpValueAdapter<Boolean>(){
-                    @Override
-                    public Boolean adapt(Boolean value) {
-                        data_bandwidthLimitRules.invalidate();
-                        return super.adapt(value);
-                    }
-                },observer);
+    public Closure<Void, Boolean> function_pending_limitActivate(final BandwidthLimit.Target target, final BandwidthProfile bandwidthProfile) {
+        return new Closure<Void, Boolean>() {
+            @Override
+            public Boolean execute(Void arg) {
+                try {
+                    return model().execute(BandwidthLimitActivate.class,
+                            new BandwidthLimitActivate.ActivationRequest(target, bandwidthProfile));
+                } finally {
+                    data_bandwidthLimitRules.invalidate();
+                }
+            }
+        };
     }
 
-    public void function_limitDeactivate(BandwidthLimit.Target target, ValueObserver<Boolean> observer) {
-        fetchValue(BandwidthLimitDeactivate.class,
-                target,
-                new NoOpValueAdapter<Boolean>(){
-                    @Override
-                    public Boolean adapt(Boolean value) {
-                        data_bandwidthLimitRules.invalidate();
-                        return super.adapt(value);
-                    }
-                },observer);
+    public Closure<Void, Boolean> function_pending_limitDeactivate(final BandwidthLimit.Target target) {
+        return new Closure<Void, Boolean>() {
+            @Override
+            public Boolean execute(Void arg) {
+                try {
+                return model().execute(BandwidthLimitDeactivate.class,
+                        target);
+                }finally {
+                    data_bandwidthLimitRules.invalidate();
+                }
+            }
+        };
+    }
+
+    public void createPendingExecution(final Closure<Void, Boolean> execution) {
+        mPendingExecution = new Data<Boolean>(model()) {
+            @Override
+            protected Boolean provideData() {
+                return execution.execute(null);
+            }
+        };
+    }
+
+    public Data<Boolean> getPendingExecution() {
+        return mPendingExecution;
     }
 }

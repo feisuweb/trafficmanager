@@ -59,6 +59,7 @@ public abstract class FragmentDashboardContentSupport extends FragmentDashboardS
         switch (issueCode){
             case IssuesCodes.NO_CONFIGURATION_PROFILES:
             case IssuesCodes.NO_CONFIGURATION: return R.drawable.android_build_big;
+            case IssuesCodes.ROUTER_EXECUTION_ISSUE: return R.drawable.android_router_big;
         }
         if (IssuesCodes.isHttpIssue(issueCode)) return R.drawable.android_http_big;
         return 0;

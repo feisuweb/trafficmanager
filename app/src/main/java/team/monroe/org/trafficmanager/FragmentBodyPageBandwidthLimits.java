@@ -74,29 +74,9 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
                             BandwidthProfile bandwidthProfile = (BandwidthProfile) profileSpinner.getSelectedItem();
-                            application().function_limitActivate(bandwidthLimit.target, bandwidthProfile, new ApplicationSupport.ValueObserver<Boolean>() {
-                                @Override
-                                public void onSuccess(Boolean value) {
-
-                                }
-
-                                @Override
-                                public void onFail(Throwable exception) {
-                                    handleException(exception);
-                                }
-                            });
+                            dashboard().dialog_execute(application().function_pending_limitActivate(bandwidthLimit.target, bandwidthProfile));
                         }else {
-                            application().function_limitDeactivate(bandwidthLimit.target, new ApplicationSupport.ValueObserver<Boolean>() {
-                                @Override
-                                public void onSuccess(Boolean value) {
-
-                                }
-
-                                @Override
-                                public void onFail(Throwable exception) {
-                                    handleException(exception);
-                                }
-                            });
+                            dashboard().dialog_execute(application().function_pending_limitDeactivate(bandwidthLimit.target));
                         }
 
                     }
@@ -151,8 +131,13 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
         observer_bandwidthLimits = new Data.DataChangeObserver<List<BandwidthLimit>>() {
             @Override
             public void onDataInvalid() {
-                mBandwidthLimits = null;
-                fetch_bandwidthLimits();
+                runLastOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBandwidthLimits = null;
+                        fetch_bandwidthLimits();
+                    }
+                });
             }
 
             @Override

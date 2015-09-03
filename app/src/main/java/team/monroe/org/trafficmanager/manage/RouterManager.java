@@ -45,6 +45,9 @@ public class RouterManager {
         int page = 1;
         while (true){
             String pageText = doGetRequest(configuration.buildUrl("userRpm/FixMapCfgRpm.htm", new P<String, Object>("Page", page)),configuration.user, configuration.password);
+
+            checkIfResultIsSuccess(configuration,pageText);
+
             Matcher matcher = pattern_topLevelDhcpList.matcher(pageText);
             matcher.matches();
             String dhcpListDataString  = matcher.group(1);
@@ -100,6 +103,7 @@ public class RouterManager {
                     configuration.buildUrl("userRpm/QoSRuleListRpm.htm",
                     new P<String, Object>("Page", page)),
                     configuration.user, configuration.password);
+            checkIfResultIsSuccess(configuration,pageText);
             Matcher matcher = pattern_topLevelBandwidthLimitRules.matcher(pageText);
             matcher.matches();
             String bandwidthLimitRulesString  = matcher.group(1);
