@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -81,6 +82,21 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
 
                     }
                 });
+                profileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    boolean isFirstTime = true;
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        BandwidthProfile bandwidthProfile = (BandwidthProfile) profileSpinner.getSelectedItem();
+                        if (isFirstTime || bandwidthProfile.equals(bandwidthLimit.profile)) {
+                            isFirstTime = false;
+                            return;
+                        }
+                        dashboard().dialog_execute(application().function_pending_limitActivate(bandwidthLimit.target, bandwidthProfile));
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
                 return view;
             }
 
@@ -110,13 +126,16 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                         }, R.layout.item_bandwith_profile_vert);
                 int selectionIndex = 0;
                 if (limit.profile != null){
-                    selectionIndex = mBandwidthLimits.indexOf(limit.profile);
+                    selectionIndex = mBandwidthProfiles.indexOf(limit.profile);
                     if (selectionIndex == -1){
                         profileSpinnerAdapter.add(limit.profile);
+                        selectionIndex = 0;
                     }
+
                 }
                 profileSpinnerAdapter.addAll(mBandwidthProfiles);
                 profileSpinner.setAdapter(profileSpinnerAdapter);
+                profileSpinner.setSelection(selectionIndex);
             }
         };
     }
