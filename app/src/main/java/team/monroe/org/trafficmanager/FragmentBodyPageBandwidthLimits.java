@@ -222,6 +222,7 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
     public void onStop() {
         super.onStop();
         mRefreshAction.stop();
+        application().data_bandwidthProfiles.removeDataChangeObserver(observer_bandwidthProfiles);
     }
 
     private void fetch_profiles() {
