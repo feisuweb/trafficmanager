@@ -94,7 +94,15 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                 ((TextView)view.findViewById(R.id.text_caption)).setText(bandwidthLimit.target.getAlias().alias);
                 ((TextView)view.findViewById(R.id.text_ip)).setText(ipSetAsString(bandwidthLimit.target.getIpSet()));
                 ((ImageView)view.findViewById(R.id.image)).setImageResource(DeviceType.by(bandwidthLimit.target.getAlias().icon).drawableId);
-                CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_enabled);
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.check_favorite);
+                checkBox.setChecked(bandwidthLimit.target.isFavorite());
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        application().function_changeFavorite(bandwidthLimit.target, isChecked);
+                    }
+                });
+                checkBox = (CheckBox) view.findViewById(R.id.check_enabled);
                 checkBox.setChecked(bandwidthLimit.source != null && bandwidthLimit.source.enabled);
                 final Spinner profileSpinner = (Spinner) view.findViewById(R.id.spinner);
                 initializeSpinner(profileSpinner, bandwidthLimit);
@@ -231,6 +239,12 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
             @Override
             public void onFetch(List<BandwidthProfile> bandwidthProfiles) {
                 mBandwidthProfiles = bandwidthProfiles;
+                Collections.sort(mBandwidthProfiles, new Comparator<BandwidthProfile>() {
+                    @Override
+                    public int compare(BandwidthProfile lhs, BandwidthProfile rhs) {
+                        return new Integer(lhs.inLimit).compareTo(rhs.inLimit);
+                    }
+                });
                 updateUi_limits();
             }
 
@@ -259,6 +273,11 @@ public class FragmentBodyPageBandwidthLimits extends FragmentBodyPageDefault {
                 Collections.sort(limits, new Comparator<BandwidthLimit>() {
                     @Override
                     public int compare(BandwidthLimit lhs, BandwidthLimit rhs) {
+                        if (lhs.target.isFavorite() && rhs.target.isFavorite()) {
+                        }else {
+                            if (lhs.target.isFavorite()) return -1;
+                            if (rhs.target.isFavorite()) return 1;
+                        }
                         return new Integer(lhs.target.getAlias().icon).compareTo(rhs.target.getAlias().icon);
                     }
                 });

@@ -12,6 +12,7 @@ import java.util.List;
 import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.manage.BandwidthProfileManager;
 import team.monroe.org.trafficmanager.manage.DeviceAliasManager;
+import team.monroe.org.trafficmanager.manage.FavoriteManager;
 import team.monroe.org.trafficmanager.manage.ObjectManager;
 import team.monroe.org.trafficmanager.manage.RouterManager;
 import team.monroe.org.trafficmanager.uc.IpReservationGetAll;
@@ -32,6 +33,7 @@ public class AppModel extends AndroidModel {
         serviceRegistry.registrate(DeviceAliasManager.class, new DeviceAliasManager(context));
         serviceRegistry.registrate(ObjectManager.class, new ObjectManager(context));
         serviceRegistry.registrate(BandwidthProfileManager.class, new BandwidthProfileManager(context));
+        serviceRegistry.registrate(FavoriteManager.class, new FavoriteManager(context));
 
 
     }

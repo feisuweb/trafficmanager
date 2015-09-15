@@ -8,10 +8,12 @@ public class DeviceInfo implements Serializable, BandwidthLimit.Target {
 
     public final DeviceAlias deviceAlias;
     public final IpReservation ipReservation;
+    public final boolean favorite;
 
-    public DeviceInfo(DeviceAlias deviceAlias, IpReservation ipReservation) {
+    public DeviceInfo(DeviceAlias deviceAlias, IpReservation ipReservation, boolean favorite) {
         this.deviceAlias = deviceAlias;
         this.ipReservation = ipReservation;
+        this.favorite = favorite;
     }
 
     public String getAlias(Resources resources) {
@@ -27,6 +29,11 @@ public class DeviceInfo implements Serializable, BandwidthLimit.Target {
     }
 
     @Override
+    public String getId() {
+        return ipReservation.mac;
+    }
+
+    @Override
     public String[] getIpSet() {
         return new String[]{ipReservation.ip, ipReservation.ip};
     }
@@ -35,5 +42,10 @@ public class DeviceInfo implements Serializable, BandwidthLimit.Target {
     @Override
     public DeviceAlias getAlias() {
         return deviceAlias;
+    }
+
+    @Override
+    public boolean isFavorite() {
+        return favorite;
     }
 }

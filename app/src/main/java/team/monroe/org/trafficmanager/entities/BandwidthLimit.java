@@ -15,8 +15,10 @@ public class BandwidthLimit implements Serializable {
     }
 
     public static interface Target extends Serializable {
+        public String getId();
         public String[] getIpSet();
         public DeviceAlias getAlias();
+        public boolean isFavorite();
     }
 
     @Override

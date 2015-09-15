@@ -21,6 +21,7 @@ import team.monroe.org.trafficmanager.entities.DeviceAlias;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
 import team.monroe.org.trafficmanager.entities.IpReservation;
 import team.monroe.org.trafficmanager.exceptions.NoBandwidthProfileIssue;
+import team.monroe.org.trafficmanager.manage.FavoriteManager;
 import team.monroe.org.trafficmanager.uc.BandwidthLimitActivate;
 import team.monroe.org.trafficmanager.uc.BandwidthLimitDeactivate;
 import team.monroe.org.trafficmanager.uc.BandwidthLimitDelete;
@@ -85,7 +86,9 @@ public class App extends ApplicationSupport<AppModel> {
                     List<DeviceInfo> answer = new ArrayList<>();
                     for (IpReservation reservation : reservations) {
                         DeviceAlias alias = model().execute(DeviceAliasGet.class, reservation.mac);
-                        answer.add(new DeviceInfo(alias, reservation));
+                        //TODO: kind of brain f**ck
+                        boolean isFavorite = model().usingService(FavoriteManager.class).isFavoriteTarget(new DeviceInfo(alias, reservation, false).getId());
+                        answer.add(new DeviceInfo(alias, reservation, isFavorite));
                     }
                     return answer;
                 } catch (FetchException e) {
@@ -208,6 +211,11 @@ public class App extends ApplicationSupport<AppModel> {
         }, observer);
     }
 
+    public void function_changeFavorite(BandwidthLimit.Target target, boolean favorite) {
+         model().usingService(FavoriteManager.class).updateFavoriteTarget(target.getId(), favorite);
+         data_devicesInfo.invalidate();
+    }
+
     public Closure<Void, Boolean> function_pending_limitActivate(final BandwidthLimit.Target target, final BandwidthProfile bandwidthProfile) {
         return new Closure<Void, Boolean>() {
             @Override
@@ -262,4 +270,6 @@ public class App extends ApplicationSupport<AppModel> {
     public Data<Boolean> getPendingExecution() {
         return mPendingExecution;
     }
+
+
 }
