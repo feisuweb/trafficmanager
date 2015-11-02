@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         style="@style/Text.Header"
         android:text="Bandwidth Manager"
-        android:layout_margin="20dp"
+        android:layout_margin="30dp"
         />
 
     <RelativeLayout
@@ -29,8 +29,17 @@
             android:layout_below="@+id/image_cloud"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:padding="20dp"
             style="@style/Panel.Navigation"
-            android:orientation="horizontal">
+            >
+
+            <LinearLayout
+                android:id="@+id/panel_nav_btns"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

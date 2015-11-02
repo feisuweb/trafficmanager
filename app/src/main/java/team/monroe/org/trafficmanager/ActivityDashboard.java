@@ -143,7 +143,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 icon = R.drawable.android_components;
                 break;
             case DEVICES:
-                title = "Devices";
+                title = "Registered Devices";
                 icon = R.drawable.android_devices;
                 break;
             case  BANDWIDTH_PROFILES:
