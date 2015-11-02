@@ -163,7 +163,7 @@ public class App extends ApplicationSupport<AppModel> {
 
     }
 
-    public boolean function_hasRouterConfiguration() {
+    public boolean function_hasRouterConfiguration(){
         return false;
     }
 

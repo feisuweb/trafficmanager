@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient
+                android:angle="-90"
+                android:centerColor="#ec2336"
+                android:endColor="#ec2336"
+                android:startColor="#f32d3f"
+                android:type="linear" />
+        </shape>
+    </item>
+
+    <item>
+        <bitmap
+            android:src="@drawable/clouds2"
+            android:tileMode="repeat"
+            />
+    </item>
+</layer-list>

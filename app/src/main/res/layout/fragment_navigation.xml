@@ -4,5 +4,46 @@
     android:layout_height="match_parent"
     style="@style/Panel.Navigation"
     >
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Text.Header"
+        android:text="Bandwidth Manager"
+        android:layout_margin="20dp"
+        />
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/background_main">
+
+        <ImageView
+            android:id="@+id/image_cloud"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/cloud_big"/>
+
+        <LinearLayout
+            android:id="@+id/panel_main"
+            android:layout_below="@+id/image_cloud"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            style="@style/Panel.Navigation"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:background="@drawable/shadow_down2"/>
+
+        <LinearLayout
+            android:layout_above="@+id/panel_main"
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:background="@drawable/shadow_up"/>
+    </RelativeLayout>
 
 </LinearLayout>
