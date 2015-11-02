@@ -93,6 +93,9 @@ public class ActivityDashboard extends ActivitySupport<App> {
     public void updateHeader(BodyPageId pageId, boolean stepBackSupport) {
         FragmentDashboardHeader dashboardHeader = (FragmentDashboardHeader) getFragmentManager().findFragmentById(R.id.frag_dash_header);
         dashboardHeader.update(pageId, stepBackSupport);
+
+        FragmentDashboardNavigation fragmentDashboardNavigation = (FragmentDashboardNavigation) getFragmentManager().findFragmentById(R.id.frag_dash_navigation);
+        fragmentDashboardNavigation.update(pageId);
     }
 
     public FragmentDashboardBodyPage getCurrentPage() {
@@ -203,6 +206,15 @@ public class ActivityDashboard extends ActivitySupport<App> {
         visibility_shadow(false, true);
     }
 
+    public void open_page(BodyPageId id) {
+        Fragment fragment = getBody(Fragment.class);
+        if (fragment == null) return;
+        if (fragment instanceof FragmentDashboardMultiPage) {
+            ((FragmentDashboardMultiPage)fragment).slideToPage(id);
+        } else {
+            throw new IllegalStateException("Not supported");
+        }
+    }
 
 
     public static class FragmentTransitionSet{

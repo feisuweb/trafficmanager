@@ -1,5 +1,6 @@
 package team.monroe.org.trafficmanager;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ public class FragmentDashboardNavigation extends FragmentDashboardSupport {
     }
 
     private final Map<ActivityDashboard.BodyPageId, NavigationButtonController> controllersMap = new HashMap<>();
+    private NavigationButtonController activatedPageController;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -35,7 +38,8 @@ public class FragmentDashboardNavigation extends FragmentDashboardSupport {
     }
 
     private void onNavigationButtonClick(ActivityDashboard.BodyPageId id, NavigationButtonController arg) {
-
+        if (activatedPageController == arg) return;
+        dashboard().open_page(arg.id);
     }
 
     private Closure<NavigationButtonController, Void> constructAction() {
@@ -48,6 +52,17 @@ public class FragmentDashboardNavigation extends FragmentDashboardSupport {
         };
     }
 
+    public void update(ActivityDashboard.BodyPageId pageId) {
+        if (activatedPageController != null){
+            if (activatedPageController.id == pageId) return;
+            activatedPageController.clearSelection(getResources());
+            activatedPageController = null;
+        }
+
+        if (!controllersMap.containsKey(pageId)) return;
+        activatedPageController = controllersMap.get(pageId);
+        activatedPageController.captureSelection(getResources());
+    }
 
 
     public static class NavigationButtonController{
@@ -82,7 +97,20 @@ public class FragmentDashboardNavigation extends FragmentDashboardSupport {
                     action.execute(answer);
                 }
             });
+            answer.clearSelection(dashboard.getResources());
             return answer;
+        }
+
+        public void clearSelection(Resources resources) {
+            title.setTextColor(resources.getColor(R.color.text_dark));
+            image.setAlpha(0.3f);
+            title.setAlpha(0.5f);
+        }
+
+        public void captureSelection(Resources resources) {
+            title.setTextColor(resources.getColor(R.color.text_highlight));
+            image.setAlpha(1f);
+            title.setAlpha(1f);
         }
     }
 }

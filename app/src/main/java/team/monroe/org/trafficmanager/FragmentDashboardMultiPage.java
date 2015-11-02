@@ -107,6 +107,16 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
         mViewPager.setCurrentItem(position, true);
     }
 
+    public void slideToPage(ActivityDashboard.BodyPageId id) {
+        for (int i=0;i<mFragmentPagerAdapter.getCount();i++){
+            FragmentDashboardBodyPage page = (FragmentDashboardBodyPage) mFragmentPagerAdapter.getItem(i);
+            if (page.getPageId() == id){
+                slideToPage(i);
+                return;
+            }
+        }
+    }
+
     private FragmentDashboardBodyPage getPage(int pageIndex) {
         FragmentDashboardBodyPage page = getFragmentDashboardPageByFragmentManager(pageIndex);
         if (page == null){
@@ -129,4 +139,6 @@ public class FragmentDashboardMultiPage extends FragmentDashboardSupport impleme
     public void viewPagerGesture(boolean enabled) {
         mViewPager.requestDisallowInterceptTouchEvent(!enabled);
     }
+
+
 }
