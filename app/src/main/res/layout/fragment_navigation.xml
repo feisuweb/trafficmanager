@@ -1,58 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/Panel.Navigation"
-    >
-    <TextView
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Text.Header"
-        android:text="Bandwidth Manager"
-        android:layout_margin="30dp"
-        />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
+    <include
         android:layout_height="fill_parent"
-        android:background="@drawable/background_main">
+        android:layout_width="fill_parent"
+        layout="@layout/panel_navigation_content"/>
 
-        <ImageView
-            android:id="@+id/image_cloud"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:src="@drawable/cloud_big"/>
-
-        <LinearLayout
-            android:id="@+id/panel_main"
-            android:layout_below="@+id/image_cloud"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:padding="20dp"
-            style="@style/Panel.Navigation"
-            >
-
-            <LinearLayout
-                android:id="@+id/panel_nav_btns"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="10dp"
-            android:background="@drawable/shadow_down2"/>
-
-        <LinearLayout
-            android:layout_above="@+id/panel_main"
-            android:layout_width="fill_parent"
-            android:layout_height="10dp"
-            android:background="@drawable/shadow_up"/>
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
