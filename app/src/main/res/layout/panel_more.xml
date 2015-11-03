@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:background="@drawable/panel">
+
+    <Button
+        android:id="@+id/action_export_devices"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Share device aliases"
+        style="@style/Button.Rect.Action.Menu"
+        />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Share bandwidth profiles"
+        style="@style/Button.Rect.Action.Menu"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="About"
+        style="@style/Button.Rect.Action.Menu"/>
+
+</LinearLayout>
