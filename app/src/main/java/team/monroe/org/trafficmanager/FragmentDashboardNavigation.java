@@ -7,13 +7,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.monroe.team.corebox.log.L;
 import org.monroe.team.corebox.utils.Closure;
 import org.monroe.team.corebox.utils.P;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import team.monroe.org.trafficmanager.view.MyScrollView;
 
 
 public class FragmentDashboardNavigation extends FragmentDashboardSupport {
@@ -35,6 +39,15 @@ public class FragmentDashboardNavigation extends FragmentDashboardSupport {
             NavigationButtonController controller = NavigationButtonController.build(bodyPageId, view(R.id.panel_nav_btns, GridView.class), dashboard(), constructAction());
             controllersMap.put(bodyPageId, controller);
         }
+
+        final ImageView cloudImage = view(R.id.image_cloud, ImageView.class);
+        view(R.id.scroll, MyScrollView.class).mScrollListener = new MyScrollView.OnScrollListener() {
+            @Override
+            public void onScrollChanged(int left, int top, int oldl, int oldt) {
+                cloudImage.setTranslationY(top / 2);
+            }
+        };
+
     }
 
     private void onNavigationButtonClick(ActivityDashboard.BodyPageId id, NavigationButtonController arg) {

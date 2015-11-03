@@ -12,6 +12,7 @@ import android.widget.ScrollView;
 public class MyScrollView extends ScrollView {
 
     public OnScrollListener mScrollListener;
+    public OnOverScrollListener mOverScrollListener;
 
     public MyScrollView(Context context) {
         super(context);
@@ -38,7 +39,19 @@ public class MyScrollView extends ScrollView {
         }
     }
 
+    @Override
+    protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+        if (mOverScrollListener != null){
+            mOverScrollListener.onOverScroll(scrollX, scrollY, clampedX, clampedY);
+        }
+    }
+
     public static interface OnScrollListener{
         void onScrollChanged(int left, int top, int oldl, int oldt);
+    }
+
+    public static interface OnOverScrollListener{
+        void onOverScroll(int scrollX, int scrollY, boolean clampedX, boolean clampedY);
     }
 }

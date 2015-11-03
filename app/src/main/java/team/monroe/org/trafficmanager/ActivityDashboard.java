@@ -2,6 +2,7 @@ package team.monroe.org.trafficmanager;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,11 +20,14 @@ public class ActivityDashboard extends ActivitySupport<App> {
 
     private View mLayerShadow;
     private AppearanceController ac_layerShadow;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        mDrawerLayout = view(R.id.drawer_layout, DrawerLayout.class);
+
         if (isFirstRun()){
             getFragmentManager()
                     .beginTransaction()
@@ -47,11 +51,15 @@ public class ActivityDashboard extends ActivitySupport<App> {
                 .build();
 
         if (getFragmentManager().findFragmentById(R.id.frag_popup) == null){
+            enableNavigationDrawer(true);
             visibility_shadow(false, false);
         }else {
+            enableNavigationDrawer(false);
             visibility_shadow(true, false);
         }
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -173,9 +181,14 @@ public class ActivityDashboard extends ActivitySupport<App> {
         Bundle bundle = new Bundle();
         bundle.putSerializable(DeviceInfo.class.getName(), deviceInfo);
         fragment.setArguments(bundle);
+        applyPopupFragment(fragment);
+    }
+
+    private void applyPopupFragment(Fragment fragment) {
         getFragmentManager().beginTransaction()
                 .add(R.id.frag_popup, fragment)
                 .commit();
+        enableNavigationDrawer(false);
     }
 
     public void dialog_editBandwidthProfile(BandwidthProfile profile) {
@@ -184,9 +197,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BandwidthProfile.class.getName(), profile);
         fragment.setArguments(bundle);
-        getFragmentManager().beginTransaction()
-                .add(R.id.frag_popup, fragment)
-                .commit();
+        applyPopupFragment(fragment);
     }
 
     public void dialog_execute(Closure<Void,Boolean> execution) {
@@ -195,15 +206,14 @@ public class ActivityDashboard extends ActivitySupport<App> {
         FragmentDialogExecute fragment = new FragmentDialogExecute();
         Bundle bundle = new Bundle();
         fragment.setArguments(bundle);
-        getFragmentManager().beginTransaction()
-                .add(R.id.frag_popup, fragment)
-                .commit();
+        applyPopupFragment(fragment);
     }
 
     public void dialog_close() {
         Fragment fragment = getFragmentManager().findFragmentById(R.id.frag_popup);
         getFragmentManager().beginTransaction().remove(fragment).commit();
         visibility_shadow(false, true);
+        enableNavigationDrawer(true);
     }
 
     public void open_page(BodyPageId id) {
@@ -213,6 +223,22 @@ public class ActivityDashboard extends ActivitySupport<App> {
             ((FragmentDashboardMultiPage)fragment).slideToPage(id);
         } else {
             throw new IllegalStateException("Not supported");
+        }
+        //Close navigation drawer
+        closeNavigationDrawer();
+    }
+
+    private void closeNavigationDrawer() {
+        if (mDrawerLayout == null) return;
+        mDrawerLayout.closeDrawer(view(R.id.frag_dash_navigation));
+    }
+
+    private void enableNavigationDrawer(boolean enable) {
+        if (mDrawerLayout == null) return;
+        if (enable){
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        }else {
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
