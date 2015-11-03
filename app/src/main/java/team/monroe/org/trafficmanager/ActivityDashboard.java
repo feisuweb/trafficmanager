@@ -1,14 +1,31 @@
 package team.monroe.org.trafficmanager;
 
 import android.app.Fragment;
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import org.monroe.team.android.box.app.ActivitySupport;
+import org.monroe.team.android.box.app.ApplicationSupport;
 import org.monroe.team.android.box.app.ui.animation.apperrance.AppearanceController;
 import org.monroe.team.corebox.utils.Closure;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 
 import team.monroe.org.trafficmanager.entities.BandwidthProfile;
 import team.monroe.org.trafficmanager.entities.DeviceInfo;
@@ -27,7 +44,6 @@ public class ActivityDashboard extends ActivitySupport<App> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         mDrawerLayout = view(R.id.drawer_layout, DrawerLayout.class);
-
         if (isFirstRun()){
             getFragmentManager()
                     .beginTransaction()
@@ -57,9 +73,31 @@ public class ActivityDashboard extends ActivitySupport<App> {
             enableNavigationDrawer(false);
             visibility_shadow(true, false);
         }
+        if (getIntent() != null && isFirstRun()) {
+            Intent intent = getIntent();
+            Uri uri = intent.getData();
+            if (uri != null) {
+                if (uri.getPath().endsWith(".tm")) {
+                    try {
+                        ParcelFileDescriptor fileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
+                        application().function_loadConfiguration(fileDescriptor.getFileDescriptor(), new ApplicationSupport.ValueObserver<Void>() {
+                            @Override
+                            public void onSuccess(Void value) {
+                                Toast.makeText(ActivityDashboard.this, "Configuration added", Toast.LENGTH_LONG).show();
+                            }
 
+                            @Override
+                            public void onFail(Throwable exception) {
+                                handle_Error(exception);
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
     }
-
 
     @Override
     public void onBackPressed() {

@@ -46,8 +46,10 @@ public class FragmentDashboardHeader extends FragmentDashboardSupport {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMorePopup.dismiss();
-        mMorePopup = null;
+        if(mMorePopup != null) {
+            mMorePopup.dismiss();
+            mMorePopup = null;
+        }
     }
 
     private void onMoreMenuClick(View v) {

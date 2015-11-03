@@ -15,6 +15,7 @@ import org.monroe.team.corebox.utils.Closure;
 import org.monroe.team.corebox.utils.P;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,6 +38,7 @@ import team.monroe.org.trafficmanager.uc.BandwidthProfileDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileUpdate;
 import team.monroe.org.trafficmanager.uc.BandwidthRulesGetAll;
+import team.monroe.org.trafficmanager.uc.ConfigurationLoadDeviceAliasList;
 import team.monroe.org.trafficmanager.uc.ConfigurationSaveDeviceAliasList;
 import team.monroe.org.trafficmanager.uc.DeviceAliasAdd;
 import team.monroe.org.trafficmanager.uc.DeviceAliasGet;
@@ -280,6 +282,17 @@ public class App extends ApplicationSupport<AppModel> {
     }
 
 
+    public void function_loadConfiguration(FileDescriptor fileDescriptor, ValueObserver<Void>  observer) {
+        fetchValue(ConfigurationLoadDeviceAliasList.class, fileDescriptor, new NoOpValueAdapter<Void>(){
+            @Override
+            public Void adapt(Void value) {
+                data_devicesInfo.invalidate();
+                data_bandwidthProfiles.invalidate();
+                return super.adapt(value);
+            }
+        } ,observer);
+    }
+
     public void function_shareConfigurationDevice(ValueObserver<Uri> observer) {
         File confsPath = new File(getCacheDir(), "confs");
         confsPath.mkdirs();
@@ -291,28 +304,7 @@ public class App extends ApplicationSupport<AppModel> {
                 return contentUri;
             }
         } , observer);
-        /*
-        },new ValueObserver<Void>() {
-
-            @Override
-            public void onSuccess(Void value) {
-                Intent shareIntent = new Intent();
-                shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                shareIntent.setType("text/plain");
-                startActivity(Intent.createChooser(shareIntent, "Share using"));
-            }
-
-            @Override
-            public void onFail(final Throwable exception) {
-                model().getResponseHandler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        throw new RuntimeException(exception);
-                    }
-                });
-            }
-        });*/
     }
+
+
 }
