@@ -4,9 +4,11 @@ import android.app.Fragment;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MotionEvent;
 import android.view.View;
@@ -74,11 +76,46 @@ public class ActivityDashboard extends ActivitySupport<App> {
             visibility_shadow(true, false);
         }
         if (getIntent() != null && isFirstRun()) {
+
             //TODO: Introduce UI
             Intent intent = getIntent();
-            Uri uri = intent.getData();
-            if (uri != null) {
-                if (uri.getPath().endsWith(".tm")) {
+            String action = intent.getAction();
+
+            if (action.compareTo(Intent.ACTION_VIEW) == 0) {
+                String scheme = intent.getScheme();
+                ContentResolver resolver = getContentResolver();
+
+                if (scheme.compareTo(ContentResolver.SCHEME_CONTENT) == 0) {
+                    Uri uri = intent.getData();
+                    String name = getContentName(resolver, uri);
+                    if (!name.endsWith(".tm")){
+                        Toast.makeText(this, "Restore failed. Invalid file", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    try {
+                        ParcelFileDescriptor fileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
+                        application().function_loadConfiguration(fileDescriptor.getFileDescriptor(), new ApplicationSupport.ValueObserver<Void>() {
+                            @Override
+                            public void onSuccess(Void value) {
+                                Toast.makeText(ActivityDashboard.this, "Configuration added", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFail(Throwable exception) {
+                                handle_Error(exception);
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else if (scheme.compareTo(ContentResolver.SCHEME_FILE) == 0) {
+                    Uri uri = intent.getData();
+                    String name = uri.getLastPathSegment();
+                    if (!name.endsWith(".tm")){
+                        Toast.makeText(this, "Restore failed. Invalid file", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     try {
                         ParcelFileDescriptor fileDescriptor = getContentResolver().openFileDescriptor(uri, "r");
                         application().function_loadConfiguration(fileDescriptor.getFileDescriptor(), new ApplicationSupport.ValueObserver<Void>() {
@@ -97,6 +134,17 @@ public class ActivityDashboard extends ActivitySupport<App> {
                     }
                 }
             }
+        }
+    }
+
+    private String getContentName(ContentResolver resolver, Uri uri){
+        Cursor cursor = resolver.query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int nameIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+        if (nameIndex >= 0) {
+            return cursor.getString(nameIndex);
+        } else {
+            return null;
         }
     }
 
