@@ -23,6 +23,7 @@ public class BandwidthLimitActivate extends UserCaseSupport<BandwidthLimitActiva
 
     @Override
     protected Boolean executeImpl(ActivationRequest request) {
+
         List<BandwidthLimitRule> existingRules = using(Model.class).execute(BandwidthRulesGetAll.class, null);
 
         ConnectionConfiguration configuration = using(ObjectManager.class).getConnectionConfiguration();
@@ -34,27 +35,21 @@ public class BandwidthLimitActivate extends UserCaseSupport<BandwidthLimitActiva
                 break;
             }
         }
-        if (eRule == null){
-            using(RouterManager.class).updateBandwidthLimitRule(
-                    configuration,
-                    "0",
-                    request.target.getIpSet()[0],
-                    request.target.getIpSet()[1],
-                    1,
-                    BandwidthLimitRule.PORT_MAX_VALUE,
-                    request.profile.inLimit,
-                    request.profile.outLimit);
-        }else {
-            using(RouterManager.class).updateBandwidthLimitRule(
-                    configuration,
-                    eRule.id,
-                    request.target.getIpSet()[0],
-                    request.target.getIpSet()[1],
-                    1,
-                    BandwidthLimitRule.PORT_MAX_VALUE,
-                    request.profile.inLimit,
-                    request.profile.outLimit);
+
+        String ruleId = "0";
+        if (eRule != null){
+            ruleId = eRule.id;
         }
+
+        using(RouterManager.class).updateBandwidthLimitRule(
+                configuration,
+                ruleId,
+                request.target.getIpSet()[0],
+                request.target.getIpSet()[1],
+                request.profile.getStartPort(),
+                request.profile.getEndPort(),
+                request.profile.getInLimit(),
+                request.profile.getOutLimit());
         return true;
     }
 

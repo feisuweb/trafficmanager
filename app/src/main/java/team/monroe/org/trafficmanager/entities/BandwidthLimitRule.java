@@ -39,8 +39,15 @@ public class BandwidthLimitRule implements Serializable {
     }
 
     public boolean matchProfile(BandwidthProfile bandwidthProfile) {
+        if (bandwidthProfile.isTrafficDisabled() && isPortDisabled()){
+            return true;
+        }
         return (minInLimit == maxInLimit && maxInLimit == bandwidthProfile.inLimit) &&
                (minOutLimit == maxOutLimit && maxOutLimit == bandwidthProfile.outLimit);
+    }
+
+    private boolean isPortDisabled() {
+        return endPort == 0 && startPort == 0;
     }
 
     public BandwidthProfile asProfile(String caption, String description) {
@@ -48,6 +55,10 @@ public class BandwidthLimitRule implements Serializable {
     }
 
     public boolean isValid() {
-        return  startPort == 1 && endPort == PORT_MAX_VALUE && protocol == ProtocolClass.ALL;
+        return (isAllPorts() || isPortDisabled()) && protocol == ProtocolClass.ALL;
+    }
+
+    private boolean isAllPorts() {
+        return startPort == 1 && endPort == PORT_MAX_VALUE;
     }
 }

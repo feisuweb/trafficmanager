@@ -40,4 +40,24 @@ public class BandwidthProfile implements Serializable {
         result = 31 * result + inLimit;
         return result;
     }
+
+    public int getStartPort() {
+        return isTrafficDisabled() ? 0:1;
+    }
+
+    public boolean isTrafficDisabled() {
+        return (inLimit == outLimit && inLimit == 0);
+    }
+
+    public int getEndPort() {
+        return isTrafficDisabled() ? 0:BandwidthLimitRule.PORT_MAX_VALUE;
+    }
+
+    public int getInLimit() {
+        return isTrafficDisabled() ? 1:inLimit;
+    }
+
+    public int getOutLimit() {
+        return isTrafficDisabled() ? 1:outLimit;
+    }
 }
