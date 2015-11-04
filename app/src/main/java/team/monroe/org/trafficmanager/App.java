@@ -1,10 +1,7 @@
 package team.monroe.org.trafficmanager;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
-import android.widget.Toast;
 
 import org.monroe.team.android.box.app.ApplicationSupport;
 import org.monroe.team.android.box.data.Data;
@@ -38,8 +35,8 @@ import team.monroe.org.trafficmanager.uc.BandwidthProfileDelete;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileGetAll;
 import team.monroe.org.trafficmanager.uc.BandwidthProfileUpdate;
 import team.monroe.org.trafficmanager.uc.BandwidthRulesGetAll;
-import team.monroe.org.trafficmanager.uc.ConfigurationLoadDeviceAliasList;
-import team.monroe.org.trafficmanager.uc.ConfigurationSaveDeviceAliasList;
+import team.monroe.org.trafficmanager.uc.ConfigurationBackup;
+import team.monroe.org.trafficmanager.uc.ConfigurationRestore;
 import team.monroe.org.trafficmanager.uc.DeviceAliasAdd;
 import team.monroe.org.trafficmanager.uc.DeviceAliasGet;
 import team.monroe.org.trafficmanager.uc.IpReservationGetAll;
@@ -283,7 +280,7 @@ public class App extends ApplicationSupport<AppModel> {
 
 
     public void function_loadConfiguration(FileDescriptor fileDescriptor, ValueObserver<Void>  observer) {
-        fetchValue(ConfigurationLoadDeviceAliasList.class, fileDescriptor, new NoOpValueAdapter<Void>(){
+        fetchValue(ConfigurationRestore.class, fileDescriptor, new NoOpValueAdapter<Void>(){
             @Override
             public Void adapt(Void value) {
                 data_devicesInfo.invalidate();
@@ -296,8 +293,8 @@ public class App extends ApplicationSupport<AppModel> {
     public void function_shareConfigurationDevice(ValueObserver<Uri> observer) {
         File confsPath = new File(getCacheDir(), "confs");
         confsPath.mkdirs();
-        final File newFile = new File(confsPath, "devices.tm");
-        fetchValue(ConfigurationSaveDeviceAliasList.class, newFile, new ValueAdapter<Void, Uri>() {
+        final File newFile = new File(confsPath, "backup.tm");
+        fetchValue(ConfigurationBackup.class, newFile, new ValueAdapter<Void, Uri>() {
             @Override
             public Uri adapt(Void value) {
                 Uri contentUri = FileProvider.getUriForFile(App.this, "team.monroe.org.trafficmanager.fileprovider", newFile);

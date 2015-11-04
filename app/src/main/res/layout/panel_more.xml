@@ -9,15 +9,9 @@
         android:id="@+id/action_export_devices"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Share device aliases"
+        android:text="Backup configuration"
         style="@style/Button.Rect.Action.Menu"
         />
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Share bandwidth profiles"
-        style="@style/Button.Rect.Action.Menu"/>
 
     <Button
         android:layout_width="fill_parent"

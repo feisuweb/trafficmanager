@@ -74,6 +74,7 @@ public class ActivityDashboard extends ActivitySupport<App> {
             visibility_shadow(true, false);
         }
         if (getIntent() != null && isFirstRun()) {
+            //TODO: Introduce UI
             Intent intent = getIntent();
             Uri uri = intent.getData();
             if (uri != null) {
